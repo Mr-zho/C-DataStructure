@@ -1,7 +1,7 @@
 #ifndef __DYNAMIC_ARRAY_H__
 #define __DYNAMIC_ARRAY_H__
 
-#define ELEMENTTYPE int 
+#define ELEMENTTYPE  void *
 /* 动态数组结构体 */
 typedef struct DynamicArray
 {
@@ -35,7 +35,7 @@ int dynamicArrayDeleteData(DynamicArray *pArray);
 int dynamicArrayAppointPosDeleteData(DynamicArray *pArray, int pos);
 
 /* 动态数组删除指定的值 */
-int dynamicArrayDeleteAppointData(DynamicArray *pArray, ELEMENTTYPE data);
+int dynamicArrayDeleteAppointData(DynamicArray *pArray, ELEMENTTYPE data, int (*compareFunc)(ELEMENTTYPE, ELEMENTTYPE));
 
 /* 获取指定位置的值 */
 int dynamicArrayGetAppointPosData(DynamicArray *pArray, int pos, ELEMENTTYPE *data);

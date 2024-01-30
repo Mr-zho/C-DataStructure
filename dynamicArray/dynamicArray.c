@@ -19,7 +19,7 @@ enum STATUS_CODE
 static int expandDynamicArrayCapacity(DynamicArray *pArray);
 static int shrinkDynamicArrayCapacity(DynamicArray *pArray);
 /* 根据元素的值 获得对应的位置 */
-static int dynamicArrayAppointDataGetPos(DynamicArray *pArray, ELEMENTTYPE data, int *pos);
+static int dynamicArrayAppointDataGetPos(DynamicArray *pArray, ELEMENTTYPE data, int *pos, int (*compareFunc)(ELEMENTTYPE, ELEMENTTYPE));
 
 
 
@@ -244,15 +244,30 @@ int dynamicArrayAppointPosDeleteData(DynamicArray *pArray, int pos)
 }
 
 /* 根据元素的值 获得对应的位置 */
-static int dynamicArrayAppointDataGetPos(DynamicArray *pArray, ELEMENTTYPE data, int *pos)
+static int dynamicArrayAppointDataGetPos(DynamicArray *pArray, ELEMENTTYPE data, int *pos, int (*compareFunc)(ELEMENTTYPE, ELEMENTTYPE))
 {
     for (int idx = 0; idx < pArray->size; idx++)
     {
+        #if 0
         if (data == pArray->data[idx])
         {
             *pos = idx;
             return ON_SUCCESS;
         }
+        #elif 0
+        if (*(int *)data == *(int*)(pArray->data[idx]))
+        {
+            *pos = idx;
+            return ON_SUCCESS;
+        }
+        #else
+        int cmp = compareFunc(data, pArray->data[idx]);
+        if (cmp == 0)
+        {
+            *pos = idx;
+            return ON_SUCCESS;
+        }
+        #endif
     }
     *pos = -1;
 
@@ -260,7 +275,7 @@ static int dynamicArrayAppointDataGetPos(DynamicArray *pArray, ELEMENTTYPE data,
 }
 
 /* 动态数组删除指定的值 */
-int dynamicArrayDeleteAppointData(DynamicArray *pArray, ELEMENTTYPE data)
+int dynamicArrayDeleteAppointData(DynamicArray *pArray, ELEMENTTYPE data, int (*compareFunc)(ELEMENTTYPE, ELEMENTTYPE))
 {
     /* 判空 */
     if (pArray == NULL)
@@ -269,7 +284,7 @@ int dynamicArrayDeleteAppointData(DynamicArray *pArray, ELEMENTTYPE data)
     }
 
     int pos = -1;
-    while (dynamicArrayAppointDataGetPos(pArray, data, &pos) != -1)
+    while (dynamicArrayAppointDataGetPos(pArray, data, &pos, compareFunc) != -1)
     {
         dynamicArrayAppointPosDeleteData(pArray, pos);
     }
