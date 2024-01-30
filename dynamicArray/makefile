@@ -10,11 +10,11 @@ A_DIR=./src_a
 
 #变量取值用$()
 $(TARGET):$(OBJS)
-	$(CC) $^ -o $@
+	$(CC) -g $^ -o $@
 
 # 模式匹配: %目标:%依赖
 %.o:%.c
-	$(CC) -c $^ -o $@
+	$(CC) -g -c $^ -o $@
 
 all:
 	make -C $(SO_DIR)

@@ -22,8 +22,20 @@ int dynamicArrayInsertData(DynamicArray *pArray, ELEMENTTYPE data);
 /* 动态数组在指定位置插入元素 */
 int dynamicArrayAppointPosInsertData(DynamicArray *pArray, int pos, ELEMENTTYPE data);
 
+/* 获取数组的元素个数 */
+int dynamicArrayGetSize(DynamicArray *pArray, int *pSize);
 
+/* 获取数组的容量大小 */
+int dynamicArrayGetCapacity(DynamicArray *pArray, int *pCapacity);
 
+/* 动态数组删除元素 (默认删除数组末尾位置) */
+int dynamicArrayDeleteData(DynamicArray *pArray);
+
+/* 动态数组在指定位置删除元素 */
+int dynamicArrayAppointPosDeleteData(DynamicArray *pArray, int pos);
+
+/* 动态数组删除指定的值 */
+int dynamicArrayDeleteAppointData(DynamicArray *pArray, ELEMENTTYPE data);
 
 
 #endif //__DYNAMIC_ARRAY_H__
