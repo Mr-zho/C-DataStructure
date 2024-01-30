@@ -18,6 +18,9 @@ enum STATUS_CODE
 /* 静态函数前置声明 */
 static int expandDynamicArrayCapacity(DynamicArray *pArray);
 static int shrinkDynamicArrayCapacity(DynamicArray *pArray);
+/* 根据元素的值 获得对应的位置 */
+static int dynamicArrayAppointDataGetPos(DynamicArray *pArray, ELEMENTTYPE data, int *pos);
+
 
 
 /* 动态数组初始化 */
@@ -240,8 +243,76 @@ int dynamicArrayAppointPosDeleteData(DynamicArray *pArray, int pos)
     return ON_SUCCESS;
 }
 
+/* 根据元素的值 获得对应的位置 */
+static int dynamicArrayAppointDataGetPos(DynamicArray *pArray, ELEMENTTYPE data, int *pos)
+{
+    for (int idx = 0; idx < pArray->size; idx++)
+    {
+        if (data == pArray->data[idx])
+        {
+            *pos = idx;
+            return ON_SUCCESS;
+        }
+    }
+    *pos = -1;
+
+    return -1;
+}
+
 /* 动态数组删除指定的值 */
 int dynamicArrayDeleteAppointData(DynamicArray *pArray, ELEMENTTYPE data)
 {
+    /* 判空 */
+    if (pArray == NULL)
+    {
+        return NULL_PTR;
+    }
 
+    int pos = -1;
+    while (dynamicArrayAppointDataGetPos(pArray, data, &pos) != -1)
+    {
+        dynamicArrayAppointPosDeleteData(pArray, pos);
+    }
+    
+    return 0;
+}
+
+/* 获取指定位置的值 */
+int dynamicArrayGetAppointPosData(DynamicArray *pArray, int pos, ELEMENTTYPE *data)
+{
+    /* 判空 */
+    if (pArray == NULL)
+    {
+        return NULL_PTR;
+    }
+
+    /* 判断位置的合法性 */
+    if (pos < 0 || pos >= pArray->size)
+    {
+        return INVALID_ACCESS;
+    }  
+
+    if (data != NULL)
+    {
+        *data = pArray->data[pos];
+    }
+
+    return ON_SUCCESS;
+}
+
+/* 销毁动态数组 */
+int dynamicArrayDestroy(DynamicArray *pArray)
+{
+    if (pArray == NULL)
+    {
+        return NULL_PTR;
+    }
+
+    if (pArray->data != NULL)
+    {
+        free(pArray->data);
+        pArray->data = NULL;
+    }
+
+    return ON_SUCCESS;
 }

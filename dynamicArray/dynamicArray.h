@@ -37,5 +37,10 @@ int dynamicArrayAppointPosDeleteData(DynamicArray *pArray, int pos);
 /* 动态数组删除指定的值 */
 int dynamicArrayDeleteAppointData(DynamicArray *pArray, ELEMENTTYPE data);
 
+/* 获取指定位置的值 */
+int dynamicArrayGetAppointPosData(DynamicArray *pArray, int pos, ELEMENTTYPE *data);
+
+/* 销毁动态数组 */
+int dynamicArrayDestroy(DynamicArray *pArray);
 
 #endif //__DYNAMIC_ARRAY_H__
