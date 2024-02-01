@@ -28,12 +28,35 @@ enum STATUS_CODE
     INVALID_ACCESS,
 };
 
+/* 静态函数前置声明 */
+static LinKNode *createLinkNode(ELEMENTTYPE data);
+
+
+/* 创建一个链表结点 */
+static LinKNode *createLinkNode(ELEMENTTYPE data)
+{
+    LinkNode * newNode = (LinKNode *)malloc(sizeof(LinKNode) * 1);
+    if (newNode == NULL)
+    {
+        perror("malloc error");
+        return MALLOC_ERROR;
+    }
+    /* 清除脏数据 */
+    memset(newNode, 0, sizeof(LinKNode) * 1);
+    newNode->data = data;
+    newNode->next = NULL;
+
+    return newNode;
+}
+
 /* 链表初始化 */
 int LinkListInit(LinkList **pList)
-{
+{   
+    /* 初始化 */
+    LinkList *list = NULL;
     do
     {
-        LinkList *list = (LinkList *)malloc(sizeof(LinkList) * 1);
+        list = (LinkList *)malloc(sizeof(LinkList) * 1);
         if (list == NULL)
         {
             perror("malloc error");
@@ -42,18 +65,12 @@ int LinkListInit(LinkList **pList)
         /* 清除脏数据 */
         memset(list, 0, sizeof(LinkList) * 1);
 
-        list->head = (LinKNode *)malloc(sizeof(LinKNode) * 1);
+        list->head = createLinkNode(0);
         if (list->head == NULL)
         {
             perror("malloc error");
             break;
         }
-        /* 清除脏数据 */
-        memset(list->head, 0, sizeof(LinKNode) * 1);
-        /* 虚拟头结点 不存放数据 */
-        list->head->data = 0;
-        list->head->next = NULL;
-
 
         /* 初始化链表结点个数为0. */
         list->size = 0;
@@ -78,4 +95,46 @@ int LinkListInit(LinkList **pList)
     }
 
     return MALLOC_ERROR; 
+}
+
+
+/* 链表头插 */
+int LinkListHeadInsert(LinkList *pList, ELEMENTTYPE data)
+{
+
+}
+
+/* 链表尾插 */
+int LinkListTailInsert(LinkList *pList, ELEMENTTYPE data)
+{
+
+}
+
+/* 链表任意位置插 */
+int LinkListAppointPosInsert(LinkList *pList, int pos, ELEMENTTYPE data)
+{
+    /* 判空 */
+    if (pList == NULL)
+    {
+        return NULL_PTR;
+    }
+
+    /* 判断位置合法性 todo... */
+    if (pos < 0 || pos > pList->size)
+    {
+        return INVALID_ACCESS;
+    }   
+
+    /* 把数据封装成结点 */
+    LinkNode * newNode = createLinkNode(data);
+    if (newNode == NULL)
+    {
+        perror("malloc error");
+        return MALLOC_ERROR;
+    }
+    
+
+    
+
+
 }

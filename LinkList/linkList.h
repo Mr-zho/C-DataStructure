@@ -11,4 +11,13 @@ typedef struct LinkList LinkList;
 int LinkListInit(LinkList **pList);
 
 
+/* 链表头插 */
+int LinkListHeadInsert(LinkList *pList, ELEMENTTYPE data);
+
+/* 链表尾插 */
+int LinkListTailInsert(LinkList *pList, ELEMENTTYPE data);
+
+/* 链表任意位置插 */
+int LinkListAppointPosInsert(LinkList *pList, int pos, ELEMENTTYPE data);
+
 #endif
