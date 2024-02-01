@@ -261,6 +261,7 @@ static int dynamicArrayAppointDataGetPos(DynamicArray *pArray, ELEMENTTYPE data,
             return ON_SUCCESS;
         }
         #else
+        /* 比较器 -> 回调函数 -> 钩子函数 */
         int cmp = compareFunc(data, pArray->data[idx]);
         if (cmp == 0)
         {

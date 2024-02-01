@@ -3,6 +3,7 @@
 #include <string.h>
 
 #define BUFFER_SIZE 32
+
 typedef struct StuInfo
 {
     int age;
@@ -17,6 +18,15 @@ int compareFunc(void *arg1, void *arg2)
 
     return val1 - val2;
 }
+
+int compareStruct(void *arg1, void *arg2)
+{
+    StuInfo *info1 = (StuInfo *)arg1;
+    StuInfo *info2 = (StuInfo *)arg2;
+
+    return strcmp(info1->name, info2->name);
+}
+
 
 int main()
 {
@@ -82,6 +92,9 @@ int main()
     printf("\n");
 #endif
 
+
+#if 0
+    /* 普通数据类型 */
     int data1 = 5;
     dynamicArrayInsertData(&array, (void *)&data1);
     int data2 = 10;
@@ -100,10 +113,45 @@ int main()
     dynamicArrayDeleteAppointData(&array, (void *)&delData, compareFunc);
     dynamicArrayGetSize(&array, &size);
     printf("size:%d\n", size);
+#endif
+
+    /* 符合数据类型 */
+    StuInfo stu1, stu2;
+    stu1.age = 22;
+    strcpy(stu1.name, "liwenbo");
+
+    stu2.age = 26;
+    strcpy(stu2.name, "mr_zhou");
+    
+    dynamicArrayInsertData(&array, (void *)&stu1);
+    dynamicArrayInsertData(&array, (void *)&stu2);
 
 
+    int size = 0;
+    dynamicArrayGetSize(&array, &size);
+    printf("size:%d\n", size);
+
+
+    StuInfo * data = NULL;
+    dynamicArrayGetAppointPosData(&array, 0, (void **)&data);
+    printf("age:%d,\t, name:%s\n", data->age, data->name);
+
+
+    StuInfo info;
+    /* 清除脏数据 */
+    memset(&info, 0, sizeof(StuInfo));
+    info.age = 22;
+    strcpy(info.name, "liwenbo");
+    dynamicArrayDeleteAppointData(&array, &info, compareStruct);
+
+    dynamicArrayGetSize(&array, &size);
+    printf("size:%d\n", size);
+
+
+    dynamicArrayGetAppointPosData(&array, 0, (void **)&data);
+    printf("age:%d,\t, name:%s\n", data->age, data->name);
+    
     /* 释放 */
     dynamicArrayDestroy(&array);
-
     return 0;
 }
