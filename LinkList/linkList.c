@@ -152,3 +152,26 @@ int LinkListAppointPosInsert(LinkList *pList, int pos, ELEMENTTYPE data)
 
     return ON_SUCCESS;
 }
+
+
+/* 链表的遍历 */
+int LinkListForeach(LinkList *pList)
+{
+    /* 判空 */
+    if (pList == NULL)
+    {
+        return NULL_PTR;
+    }
+
+    LinkNode * travelNode = pList->head->next;
+
+    while (travelNode != NULL)
+    {
+        printf("val: %d\n", travelNode->data);
+
+        /* 查找下一个结点 */
+        travelNode = travelNode->next;
+    }
+
+    return ON_SUCCESS;
+}
