@@ -23,4 +23,7 @@ int LinkListAppointPosInsert(LinkList *pList, int pos, ELEMENTTYPE data);\
 /* 链表的遍历 */
 int LinkListForeach(LinkList *pList);
 
+/* 获取链表的长度 */
+int LinkListGetSize(LinkList *pList, int *pSize);
+
 #endif

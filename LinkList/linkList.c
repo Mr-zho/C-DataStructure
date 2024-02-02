@@ -167,11 +167,29 @@ int LinkListForeach(LinkList *pList)
 
     while (travelNode != NULL)
     {
-        printf("val: %d\n", travelNode->data);
-
+        #if 1
+        printf("val: %d\n", *(int *)(travelNode->data));
+        #endif
+        
         /* 查找下一个结点 */
         travelNode = travelNode->next;
     }
 
+    return ON_SUCCESS;
+}
+
+/* 获取链表的长度 */
+int LinkListGetSize(LinkList *pList, int *pSize)
+{
+    if (pList == NULL)
+    {
+        return NULL_PTR;
+    }
+
+    if (pSize)
+    {
+        *pSize = pList->size;
+    }
+    
     return ON_SUCCESS;
 }
