@@ -150,6 +150,9 @@ int main()
     /* 链表遍历 */
     LinkListForeach(list, printData);
     printf("\n");
+
+    /* 链表的释放 */
+    LinkListDestroy(list);
 #endif
 
     return 0;

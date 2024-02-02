@@ -167,7 +167,6 @@ int LinkListAppointPosInsert(LinkList *pList, int pos, ELEMENTTYPE data)
         /* 移动尾指针 */
         pList->tail = newNode;
     }
-  
 
     /* 链表的元素个数加一 */
     (pList->size)++;
@@ -306,5 +305,35 @@ int LinkListAppointDataDelete(LinkList *pList, ELEMENTTYPE data, int (*compareFu
         LinkListAppointPosDelete(pList, pos);
     }
 
+    return ON_SUCCESS;
+}
+
+/* 链表的释放 */
+int LinkListDestroy(LinkList *pList)
+{
+    /* 判空 */
+    if (pList == NULL)
+    {
+        return NULL_PTR;
+    }
+
+    while (pList->size != 0)
+    {   
+        LinkListHeadDelete(pList);
+    }
+
+    /* 释放虚拟头结点 */
+    if (pList->head != NULL)
+    {
+        free(pList->head);
+        pList->head = NULL;
+    }
+
+    if (pList != NULL)
+    {
+        free(pList);
+        pList = NULL;
+    }
+    
     return ON_SUCCESS;
 }
