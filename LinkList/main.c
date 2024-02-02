@@ -3,12 +3,12 @@
 #include "linkList.h"
 
 
-#define BUFFER_SIZE 5
+#define BUFFER_SIZE 3
 
 int printData(void *arg)
 {
     int val = *(int *)arg;
-    printf("val:%d\n", val);
+    printf("val:%d\t", val);
 }
 
 
@@ -35,8 +35,8 @@ int main()
     LinkListInit(&list);
     
 
-#if 0
-    int nums[BUFFER_SIZE] = {11, 22, 33, 44, 55};
+#if 1
+    int nums[BUFFER_SIZE] = {11, 22, 33};
     for (int idx = 0; idx < BUFFER_SIZE; idx++)
     {
         LinkListHeadInsert(list, (void *)&nums[idx]);
@@ -45,19 +45,56 @@ int main()
     int posVal = 666;
     LinkListAppointPosInsert(list, 3, &posVal);
 
-    for (int idx = 0; idx < BUFFER_SIZE; idx++)
-    {
-        LinkListTailInsert(list, (void *)&nums[idx]);
-    }
     int size = 0;
     LinkListGetSize(list, &size);
     printf("size:%d\n", size);
 
     /* 遍历 */
     LinkListForeach(list, printData);
+    printf("\n");
+
+    /* 删除pos = 3位置的元素 */
+    LinkListAppointPosDelete(list, 3);
+    /* 遍历 */
+    LinkListForeach(list, printData);
+    printf("\n");
+
+    /* 尾删 */
+    LinkListTailDelete(list);
+    /* 遍历 */
+    LinkListForeach(list, printData);
+    printf("\n");
+
+    /* 头删 */
+    LinkListHeadDelete(list);
+    /* 遍历 */
+    LinkListForeach(list, printData);
+    printf("\n");
+
+
+    #if 0
+    /* 尾删 */
+    LinkListTailDelete(list);
+    /* 遍历 */
+    LinkListForeach(list, printData);
+    printf("\n");
+    #else
+    /* 头删 */
+    LinkListHeadDelete(list);
+    /* 遍历 */
+    LinkListForeach(list, printData);
+    printf("\n");
+    #endif
+
+    /* 空链表的情况 */
+    /* 头删 */
+    LinkListHeadDelete(list);
+    /* 遍历 */
+    LinkListForeach(list, printData);
+    printf("\n");
 #endif
 
-#if 1
+#if 0
     /* 符合数据类型 */
     StuInfo stu1, stu2, stu3;
     stu1.age = 22;
@@ -78,7 +115,7 @@ int main()
     printf("size:%d\n", size);
 
     LinkListForeach(list, printStruct);
-    
+
 #endif
     return 0;
 }
