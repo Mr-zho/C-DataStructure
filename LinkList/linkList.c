@@ -247,6 +247,13 @@ int LinkListAppointPosDelete(LinkList *pList, int pos)
 
     LinkNode * travelNode  = pList->head;
 
+    int flag = 0;
+    if (pos == pList->size - 1)
+    {
+        /* 需要移动尾指针的标记 */
+        flag = 1;
+    }
+
     while (pos)
     {
         travelNode = travelNode->next;
@@ -255,6 +262,12 @@ int LinkListAppointPosDelete(LinkList *pList, int pos)
     /* 退出循环的条件: travelNode是我要删除结点的前一个结点 */
     LinkNode * delNode = travelNode->next;
     travelNode->next = delNode->next;
+
+
+    if (flag == 1)
+    {
+        pList->tail = travelNode;
+    }
 
     /* 释放堆空间 */
     if (delNode != NULL)

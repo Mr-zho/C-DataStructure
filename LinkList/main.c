@@ -126,7 +126,7 @@ int main()
 
 #endif
 
-#if 1
+#if 0
     /* 测试指定位置删除 */
     int nums[BUFFER_SIZE] = {11, 11, 22, 33};
     for (int idx = 0; idx < BUFFER_SIZE; idx++)
@@ -153,6 +153,37 @@ int main()
 
     /* 链表的释放 */
     LinkListDestroy(list);
+#endif
+
+
+
+#if 1
+    /* 测试尾指针 */
+    /* 测试指定位置删除 */
+    int nums[BUFFER_SIZE] = {11, 11, 22, 33};
+
+    for (int idx = 0; idx < BUFFER_SIZE; idx++)
+    {
+        LinkListTailInsert(list, (void *)&nums[idx]);
+    }
+    /* 链表遍历 */
+    LinkListForeach(list, printData);
+    printf("\n");
+
+
+    LinkListTailDelete(list);
+    /* 链表遍历 */
+    LinkListForeach(list, printData);
+    printf("\n");
+
+    for (int idx = 0; idx < BUFFER_SIZE; idx++)
+    {
+        LinkListTailInsert(list, (void *)&nums[idx]);
+    }
+    /* 链表遍历 */
+    LinkListForeach(list, printData);
+    printf("\n");
+
 #endif
 
     return 0;
