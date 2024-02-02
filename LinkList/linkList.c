@@ -155,7 +155,7 @@ int LinkListAppointPosInsert(LinkList *pList, int pos, ELEMENTTYPE data)
 
 
 /* 链表的遍历 */
-int LinkListForeach(LinkList *pList)
+int LinkListForeach(LinkList *pList, int (*printFunc)(ELEMENTTYPE))
 {
     /* 判空 */
     if (pList == NULL)
@@ -167,10 +167,12 @@ int LinkListForeach(LinkList *pList)
 
     while (travelNode != NULL)
     {
-        #if 1
+#if 0
         printf("val: %d\n", *(int *)(travelNode->data));
-        #endif
-        
+#else
+        printFunc(travelNode->data);
+#endif
+
         /* 查找下一个结点 */
         travelNode = travelNode->next;
     }
@@ -192,4 +194,62 @@ int LinkListGetSize(LinkList *pList, int *pSize)
     }
     
     return ON_SUCCESS;
+}
+
+
+/* 链表的头删 */
+int LinkListHeadDelete(LinkList *pList)
+{
+    return LinkListAppointPosDelete(pList, 0);
+}
+
+/* 链表的尾删 */
+int LinkListTailDelete(LinkList *pList)
+{
+    return LinkListAppointPosDelete(pList, pList->size - 1);
+}
+
+/* 链表删除任意位置 */
+int LinkListAppointPosDelete(LinkList *pList, int pos)
+{
+    /* 判空 */
+    if (pList == NULL)
+    {
+        return NULL_PTR;
+    }
+
+    /* 判断位置合法性 */
+    if (pos < 0 || pos > pList->size - 1)
+    {   
+        return INVALID_ACCESS;
+    }
+
+    LinkNode * travelNode  = pList->head;
+
+    while (pos)
+    {
+        travelNode = travelNode->next;
+        pos--;
+    }
+    /* 退出循环的条件: travelNode是我要删除结点的前一个结点 */
+    LinkNode * delNode = travelNode->next;
+    travelNode->next = delNode->next;
+
+    /* 释放堆空间 */
+    if (delNode != NULL)
+    {
+        free(delNode);
+        delNode = NULL;
+    }
+
+    /* 链表的元素个数减一 */
+    pList->size--;
+
+    return ON_SUCCESS;
+}
+
+/* 链表删除任意的值 */
+int LinkListAppointDataDelete(LinkList *pList, ELEMENTTYPE data)
+{
+
 }
