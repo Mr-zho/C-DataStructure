@@ -3,15 +3,13 @@
 #include "linkList.h"
 
 
-#define BUFFER_SIZE 3
+#define BUFFER_SIZE 4
 
 int printData(void *arg)
 {
     int val = *(int *)arg;
     printf("val:%d\t", val);
 }
-
-
 
 typedef struct StuInfo
 {
@@ -29,13 +27,23 @@ int printStruct(void *arg)
     return ret;
 }
 
+
+int compareFunc(void *arg1, void *arg2)
+{
+    int val1 = *(int *)arg1;
+    int val2 = *(int *)arg2;
+
+    return val1 - val2;
+}
+
 int main()
 {
     LinkList *list = NULL;
     LinkListInit(&list);
     
 
-#if 1
+#if 0
+    /* 测试指定位置删除 */
     int nums[BUFFER_SIZE] = {11, 22, 33};
     for (int idx = 0; idx < BUFFER_SIZE; idx++)
     {
@@ -117,6 +125,33 @@ int main()
     LinkListForeach(list, printStruct);
 
 #endif
+
+#if 1
+    /* 测试指定位置删除 */
+    int nums[BUFFER_SIZE] = {11, 11, 22, 33};
+    for (int idx = 0; idx < BUFFER_SIZE; idx++)
+    {
+        LinkListHeadInsert(list, (void *)&nums[idx]);
+    }
+
+    for (int idx = 0; idx < BUFFER_SIZE; idx++)
+    {
+        LinkListTailInsert(list, (void *)&nums[idx]);
+    }
+    /* 链表遍历 */
+    LinkListForeach(list, printData);
+    printf("\n");
+
+
+    /* 按元素的值删除 */
+    int delData = 11;
+    LinkListAppointDataDelete(list, &delData, compareFunc);
+
+    /* 链表遍历 */
+    LinkListForeach(list, printData);
+    printf("\n");
+#endif
+
     return 0;
 }
 

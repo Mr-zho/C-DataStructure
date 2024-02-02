@@ -36,6 +36,6 @@ int LinkListTailDelete(LinkList *pList);
 int LinkListAppointPosDelete(LinkList *pList, int pos);
 
 /* 链表删除任意的值 */
-int LinkListAppointDataDelete(LinkList *pList, ELEMENTTYPE data);
+int LinkListAppointDataDelete(LinkList *pList, ELEMENTTYPE data, int (*compareFunc)(ELEMENTTYPE, ELEMENTTYPE));
 
 #endif

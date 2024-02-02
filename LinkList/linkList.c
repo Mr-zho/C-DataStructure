@@ -30,6 +30,7 @@ enum STATUS_CODE
 
 /* 静态函数前置声明 */
 static LinkNode *createLinkNode(ELEMENTTYPE data);
+static int LinkListAccordAppointDataGetPos(LinkList *pList, ELEMENTTYPE data, int *pos, int (*compareFunc)(ELEMENTTYPE arg1, ELEMENTTYPE arg2));
 
 
 /* 创建一个链表结点 */
@@ -248,8 +249,41 @@ int LinkListAppointPosDelete(LinkList *pList, int pos)
     return ON_SUCCESS;
 }
 
-/* 链表删除任意的值 */
-int LinkListAppointDataDelete(LinkList *pList, ELEMENTTYPE data)
-{
+/* 根据值 获得链表的位置 */
+static int LinkListAccordAppointDataGetPos(LinkList *pList, ELEMENTTYPE data, int *pos, int (*compareFunc)(ELEMENTTYPE arg1, ELEMENTTYPE arg2))
+{   
+    LinkNode * travelNode = pList->head->next;
 
+    int position = 0;
+    while (travelNode != NULL)
+    {
+        int cmp = compareFunc(data, travelNode->data);
+        if (cmp == 0)
+        {
+            *pos = position;
+            return position;
+        }
+        travelNode = travelNode->next;
+        position++;
+    }
+    *pos = -1;
+
+    return -1;
+}
+
+/* 链表删除任意的值 */
+int LinkListAppointDataDelete(LinkList *pList, ELEMENTTYPE data, int (*compareFunc)(ELEMENTTYPE, ELEMENTTYPE))
+{
+    if(pList == NULL)
+    {
+        return NULL_PTR;
+    }
+
+    int pos = -1;
+    while (LinkListAccordAppointDataGetPos(pList, data, &pos, compareFunc) != -1)
+    {
+        LinkListAppointPosDelete(pList, pos);
+    }
+    
+    return ON_SUCCESS;
 }
