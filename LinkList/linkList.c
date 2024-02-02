@@ -3,12 +3,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct LinKNode
+struct LinkNode
 {
     /* 数据域 */
     ELEMENTTYPE data;
     /* 指针域 */
-    struct LinKNode *next;
+    struct LinkNode *next;
 };
 
 struct LinkList
@@ -16,7 +16,7 @@ struct LinkList
     /* 链表的长度(结点个数) */
     int size;
     /* 链表的头结点 (虚拟头结点) */
-    LinKNode * head;
+    LinkNode * head;
 };
 
 /* 状态码 */
@@ -29,20 +29,20 @@ enum STATUS_CODE
 };
 
 /* 静态函数前置声明 */
-static LinKNode *createLinkNode(ELEMENTTYPE data);
+static LinkNode *createLinkNode(ELEMENTTYPE data);
 
 
 /* 创建一个链表结点 */
-static LinKNode *createLinkNode(ELEMENTTYPE data)
+static LinkNode *createLinkNode(ELEMENTTYPE data)
 {
-    LinkNode * newNode = (LinKNode *)malloc(sizeof(LinKNode) * 1);
+    LinkNode * newNode = (LinkNode *)malloc(sizeof(LinkNode) * 1);
     if (newNode == NULL)
     {
         perror("malloc error");
-        return MALLOC_ERROR;
+        return NULL;
     }
     /* 清除脏数据 */
-    memset(newNode, 0, sizeof(LinKNode) * 1);
+    memset(newNode, 0, sizeof(LinkNode) * 1);
     newNode->data = data;
     newNode->next = NULL;
 
@@ -78,6 +78,7 @@ int LinkListInit(LinkList **pList)
         /* 解引用 */
         *pList = list;
 
+
         return ON_SUCCESS;
     } while(0);
 
@@ -101,13 +102,13 @@ int LinkListInit(LinkList **pList)
 /* 链表头插 */
 int LinkListHeadInsert(LinkList *pList, ELEMENTTYPE data)
 {
-
+    return LinkListAppointPosInsert(pList, 0, data);
 }
 
 /* 链表尾插 */
 int LinkListTailInsert(LinkList *pList, ELEMENTTYPE data)
 {
-
+    return LinkListAppointPosInsert(pList, pList->size, data);
 }
 
 /* 链表任意位置插 */
@@ -133,8 +134,21 @@ int LinkListAppointPosInsert(LinkList *pList, int pos, ELEMENTTYPE data)
         return MALLOC_ERROR;
     }
     
+    /* head 是虚拟头结点 */
+    LinkNode * travelNode = pList->head;
 
-    
+    while (pos)
+    {
+        travelNode = travelNode->next;
+        pos--;
+    }
 
+    /* 挂结点 */
+    newNode->next = travelNode->next;       // 1
+    travelNode->next = newNode;             // 2
 
+    /* 链表的元素个数加一 */
+    (pList->size)++;
+
+    return ON_SUCCESS;
 }

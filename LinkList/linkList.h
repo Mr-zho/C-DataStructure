@@ -3,7 +3,7 @@
 
 #define ELEMENTTYPE void *
 
-typedef struct LinKNode LinKNode;
+typedef struct LinkNode LinkNode;
 typedef struct LinkList LinkList;
 
  
