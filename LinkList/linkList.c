@@ -17,6 +17,8 @@ struct LinkList
     int size;
     /* 链表的头结点 (虚拟头结点) */
     LinkNode * head;
+    /* 链表的尾指针 */
+    LinkNode * tail;
 };
 
 /* 状态码 */
@@ -72,6 +74,8 @@ int LinkListInit(LinkList **pList)
             perror("malloc error");
             break;
         }
+        /* 初始化的时候, 将尾指针指向头 */
+        list->tail = list->head;
 
         /* 初始化链表结点个数为0. */
         list->size = 0;
@@ -138,15 +142,32 @@ int LinkListAppointPosInsert(LinkList *pList, int pos, ELEMENTTYPE data)
     /* head 是虚拟头结点 */
     LinkNode * travelNode = pList->head;
 
-    while (pos)
+    int flag = 0;
+    if (pos == pList->size)
     {
-        travelNode = travelNode->next;
-        pos--;
-    }
+        travelNode = pList->tail;
 
+        /* 需要修改尾指针的标记 */
+        flag = 1;
+    }
+    else
+    {
+        while (pos)
+        {
+            travelNode = travelNode->next;
+            pos--;
+        }
+    }
     /* 挂结点 */
     newNode->next = travelNode->next;       // 1
     travelNode->next = newNode;             // 2
+
+    if (flag == 1)
+    {
+        /* 移动尾指针 */
+        pList->tail = newNode;
+    }
+  
 
     /* 链表的元素个数加一 */
     (pList->size)++;
@@ -284,6 +305,6 @@ int LinkListAppointDataDelete(LinkList *pList, ELEMENTTYPE data, int (*compareFu
     {
         LinkListAppointPosDelete(pList, pos);
     }
-    
+
     return ON_SUCCESS;
 }
