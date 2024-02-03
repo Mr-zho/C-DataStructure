@@ -1,4 +1,5 @@
 #include "dynamicArrayStack.h"
+#include "dynamicArray.h"
 
 
 /* 初始化栈 */

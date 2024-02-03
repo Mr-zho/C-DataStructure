@@ -1,9 +1,9 @@
 #ifndef __DYNAMICARRAY_STACK_H__
 #define __DYNAMICARRAY_STACK_H__
 
-#include "dynamicArray.h"
+#include "common.h"
 
-typedef struct DynamicArray DynamicArrayStack;
+typedef DynamicArray DynamicArrayStack;
 
 /* 初始化栈 */
 int dynamicArrayStackInit(DynamicArrayStack *pStack);
