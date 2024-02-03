@@ -3,14 +3,14 @@ OBJS=$(patsubst %.c, %.o, $(wildcard ./*.c))
 TARGET=main
 
 LDFLAGS=-L./src_so -L./src_a
-LIBS=-lMyAdd -lMyDiv
+LIBS=-lMyDYArray
 
 SO_DIR=./src_so
 A_DIR=./src_a
 
 #变量取值用$()
 $(TARGET):$(OBJS)
-	$(CC) -g $^ -o $@
+	$(CC) -g $^ $(LIBS) $(LDFLAGS) -o $@
 
 # 模式匹配: %目标:%依赖
 %.o:%.c
@@ -18,7 +18,6 @@ $(TARGET):$(OBJS)
 
 all:
 	make -C $(SO_DIR)
-	make -C $(A_DIR)
 
 # 伪目标/伪文件
 .PHONY:	clean
