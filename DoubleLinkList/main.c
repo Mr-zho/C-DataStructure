@@ -3,7 +3,7 @@
 #include "doubleLinkList.h"
 
 
-#define BUFFER_SIZE 4
+#define BUFFER_SIZE 2
 
 int printData(void *arg)
 {
@@ -41,7 +41,7 @@ int main()
     DoubleLinkList *list = NULL;
     DoubleLinkListInit(&list);
     
-    int nums[BUFFER_SIZE] = {11, 22, 33, 44};
+    int nums[BUFFER_SIZE] = {11, 22};
     for (int idx = 0; idx < BUFFER_SIZE; idx++)
     {
         DoubleLinkListTailInsert(list, &nums[idx]);
@@ -53,8 +53,75 @@ int main()
 
     
     /* 逆序打印 */
+    printf("=======reverse print=========\n");
     DoubleLinkListReverseForeach(list, printData);
     printf("\n");
+    
+    /* 头插 */
+    DoubleLinkListHeadInsert(list, &nums[0]);
+
+    printf("=======sequence print=========\n");
+    DoubleLinkListForeach(list, printData);
+    printf("\n");
+
+    /* 任意位置插 */
+    int posValue = 666;
+    DoubleLinkListAppointPosInsert(list, 2, &posValue);
+    printf("=======sequence print=========\n");
+    DoubleLinkListForeach(list, printData);
+    printf("\n");
+
+
+    printf("==============================================\n");
+    /* 头删 */
+    DoubleLinkListHeadDelete(list);
+    printf("=======sequence print=========\n");
+    DoubleLinkListForeach(list, printData);
+    printf("\n");
+
+    /* 任意位置删 */
+    DoubleLinkListAppointPosDelete(list, 1);
+    printf("=======sequence print=========\n");
+    DoubleLinkListForeach(list, printData);
+    printf("\n");
+
+    /* 尾删 */
+    DoubleLinkListTailDelete(list);
+    printf("=======sequence print=========\n");
+    DoubleLinkListForeach(list, printData);
+    printf("\n");
+
+    // printf("=======reverse print=========\n");
+    // DoubleLinkListReverseForeach(list, printData);
+    // printf("\n");
+    #if 1
+    DoubleLinkListTailDelete(list);
+    printf("=======sequence print=========\n");
+    DoubleLinkListForeach(list, printData);
+    printf("\n");
+    #else
+    DoubleLinkListHeadDelete(list);
+    printf("=======sequence print=========\n");
+    DoubleLinkListForeach(list, printData);
+    printf("\n");
+    #endif
+
+    DoubleLinkListGetSize(list, &size);
+    printf("size:%d\n", size);
+
+
+    DoubleLinkListTailInsert(list, &nums[0]);
+    DoubleLinkListTailInsert(list, &nums[1]);
+
+    DoubleLinkListGetSize(list, &size);
+    printf("size:%d\n", size);
+    printf("=======sequence print=========\n");
+    DoubleLinkListForeach(list, printData);
+    printf("\n");
+
+    /* 链表释放 */
+    DoubleLinkListDestroy(list);
+    
     return 0;
 }
 

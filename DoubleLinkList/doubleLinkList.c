@@ -280,6 +280,8 @@ int DoubleLinkListAppointPosDelete(DoubleLinkList *pList, int pos)
         delNode = pList->tail;
         /* 尾指针移动 */
         travelNode = delNode->prev;
+        /* 手动置为NULL */
+        travelNode->next = NULL;
     }
     else
     {
@@ -293,14 +295,6 @@ int DoubleLinkListAppointPosDelete(DoubleLinkList *pList, int pos)
         travelNode->next = delNode->next;
         delNode->next->prev = travelNode;
     }
-
-    /* 释放结点 */
-    if (delNode != NULL)
-    {
-        free(delNode);
-        delNode = NULL;
-    }
-
 
     if (flag == 1)
     {
