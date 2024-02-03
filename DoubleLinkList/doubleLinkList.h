@@ -22,6 +22,9 @@ int DoubleLinkListAppointPosInsert(DoubleLinkList *pList, int pos, ELEMENTTYPE d
 /* 链表的遍历 */
 int DoubleLinkListForeach(DoubleLinkList *pList, int (*printFunc)(ELEMENTTYPE));
 
+/* 链表的反向遍历 */
+int DoubleLinkListReverseForeach(DoubleLinkList *pList, int (*printFunc)(ELEMENTTYPE));
+
 /* 获取链表的长度 */
 int DoubleLinkListGetSize(DoubleLinkList *pList, int *pSize);
 

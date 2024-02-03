@@ -8,7 +8,8 @@ struct DoubleLinkNode
     /* 数据域 */
     ELEMENTTYPE data;
     /* 指针域 */
-    struct DoubleLinkNode *next;
+    struct DoubleLinkNode *prev;        /* prev指针 */
+    struct DoubleLinkNode *next;        /* next指针 */
 };
 
 struct DoubleLinkList
@@ -47,6 +48,7 @@ static DoubleLinkNode *createDoubleLinkNode(ELEMENTTYPE data)
     /* 清除脏数据 */
     memset(newNode, 0, sizeof(DoubleLinkNode) * 1);
     newNode->data = data;
+    newNode->prev = NULL;
     newNode->next = NULL;
 
     return newNode;
@@ -149,6 +151,13 @@ int DoubleLinkListAppointPosInsert(DoubleLinkList *pList, int pos, ELEMENTTYPE d
 
         /* 需要修改尾指针的标记 */
         flag = 1;
+
+        #if 0
+        newNode->next = travelNode->next;       // 1
+        newNode->prev = travelNode;             // 2
+        // travelNode->next->prev = newNode;       // 3
+        travelNode->next = newNode;             // 4
+        #endif
     }
     else
     {
@@ -157,10 +166,23 @@ int DoubleLinkListAppointPosInsert(DoubleLinkList *pList, int pos, ELEMENTTYPE d
             travelNode = travelNode->next;
             pos--;
         }
+        #if 0
+        /* 挂结点 */
+        newNode->next = travelNode->next;       // 1
+        newNode->prev = travelNode;             // 2
+        travelNode->next->prev = newNode;       // 3
+        travelNode->next = newNode;             // 4
+        #endif 
     }
     /* 挂结点 */
     newNode->next = travelNode->next;       // 1
-    travelNode->next = newNode;             // 2
+    newNode->prev = travelNode;             // 2
+    if (flag == 0)
+    {
+        travelNode->next->prev = newNode;       // 3
+    }
+    travelNode->next = newNode;             // 4
+   
 
     if (flag == 1)
     {
@@ -247,21 +269,37 @@ int DoubleLinkListAppointPosDelete(DoubleLinkList *pList, int pos)
 
     DoubleLinkNode * travelNode  = pList->head;
 
+    DoubleLinkNode * delNode = NULL;
     int flag = 0;
     if (pos == pList->size - 1)
     {
         /* 需要移动尾指针的标记 */
         flag = 1;
+
+        /* 尾指针指向的结点 是要删除的结点 */
+        delNode = pList->tail;
+        /* 尾指针移动 */
+        travelNode = delNode->prev;
+    }
+    else
+    {
+        while (pos)
+        {
+            travelNode = travelNode->next;
+            pos--;
+        }
+        /* 退出循环的条件: travelNode是我要删除结点的前一个结点 */
+        delNode = travelNode->next;
+        travelNode->next = delNode->next;
+        delNode->next->prev = travelNode;
     }
 
-    while (pos)
+    /* 释放结点 */
+    if (delNode != NULL)
     {
-        travelNode = travelNode->next;
-        pos--;
+        free(delNode);
+        delNode = NULL;
     }
-    /* 退出循环的条件: travelNode是我要删除结点的前一个结点 */
-    DoubleLinkNode * delNode = travelNode->next;
-    travelNode->next = delNode->next;
 
 
     if (flag == 1)
@@ -348,5 +386,27 @@ int DoubleLinkListDestroy(DoubleLinkList *pList)
         pList = NULL;
     }
     
+    return ON_SUCCESS;
+}
+
+
+/* 链表的反向遍历 */
+int DoubleLinkListReverseForeach(DoubleLinkList *pList, int (*printFunc)(ELEMENTTYPE))
+{
+    /* 判空 */
+    if (pList == NULL)
+    {
+        return NULL_PTR;
+    }
+
+    DoubleLinkNode * travelNode = pList->tail;
+    while (travelNode != pList->head)
+    {
+        printFunc(travelNode->data);
+
+        travelNode = travelNode->prev;
+    }
+
+    /* 退出条件是: 碰到虚拟头结点 */
     return ON_SUCCESS;
 }
