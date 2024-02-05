@@ -14,6 +14,16 @@ enum STATUS_CODE
 
 #define DEFAULR_CAPACITY    10
 
+/* 动态数组结构体 */
+struct DynamicArray
+{
+    /* 数据 */
+    ELEMENTTYPE * data;
+    /* 元素个数 */
+    int size;
+    /* 容量大小 */
+    int capacity;
+};
 
 /* 静态函数前置声明 */
 static int expandDynamicArrayCapacity(DynamicArray *pArray);

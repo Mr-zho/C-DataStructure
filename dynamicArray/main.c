@@ -32,62 +32,27 @@ int main()
 {
     DynamicArray array;
     memset(&array, 0, sizeof(array));
-
     
     dynamicArrayInit(&array, 5);
-#if 0
+#if 1
     int size = 0;
     dynamicArrayGetSize(&array, &size);
-    int capacity = 0;
-    dynamicArrayGetCapacity(&array, &capacity);
-    printf("size:%d,\tcapacity:%d\n", size, capacity);
+    printf("size:%d\n", size);
 
-
-    for (int idx = 0; idx < 4; idx++)
+    int idx = 1;
+    for (idx; idx <= 5; idx++)
     {
-        dynamicArrayInsertData(&array, idx + 1);
-        dynamicArrayInsertData(&array, idx + 1);
-
+        dynamicArrayInsertData(&array, (void *)&idx);
     }
 
     dynamicArrayGetSize(&array, &size);
-    dynamicArrayGetCapacity(&array, &capacity);
-    printf("size:%d,\tcapacity:%d\n", size, capacity);
+    printf("size:%d\n", size);
 
-
-    int value = 0;
+    int *posValue = NULL;
     for (int idx = 0; idx < size; idx++)
     {
-        dynamicArrayGetAppointPosData(&array, idx, &value);
-        printf("value:%d\t", value);
-    }   
-    printf("\n");
-
-    dynamicArrayAppointPosInsertData(&array, 2, 666);
-    dynamicArrayGetSize(&array, &size);
-    for (int idx = 0; idx < size; idx++)
-    {
-        dynamicArrayGetAppointPosData(&array, idx, &value);
-        printf("value:%d\t", value);
-    }   
-    printf("\n");
-
-    dynamicArrayAppointPosDeleteData(&array, 4);
-    dynamicArrayGetSize(&array, &size);
-    for (int idx = 0; idx < size; idx++)
-    {
-        dynamicArrayGetAppointPosData(&array, idx, &value);
-        printf("value:%d\t", value);
-    }   
-    printf("\n");
-
-
-    dynamicArrayDeleteAppointData(&array, 3);
-    dynamicArrayGetSize(&array, &size);
-    for (int idx = 0; idx < size; idx++)
-    {
-        dynamicArrayGetAppointPosData(&array, idx, &value);
-        printf("value:%d\t", value);
+        dynamicArrayGetAppointPosData(&array, idx, (void **)&posValue);
+        printf("posValue:%d\t", *posValue);
     }   
     printf("\n");
 #endif
@@ -115,6 +80,7 @@ int main()
     printf("size:%d\n", size);
 #endif
 
+#if 0
     /* 符合数据类型 */
     StuInfo stu1, stu2;
     stu1.age = 22;
@@ -150,7 +116,8 @@ int main()
 
     dynamicArrayGetAppointPosData(&array, 0, (void **)&data);
     printf("age:%d,\t, name:%s\n", data->age, data->name);
-    
+#endif
+
     /* 释放 */
     dynamicArrayDestroy(&array);
     return 0;
