@@ -1,7 +1,6 @@
 #ifndef __DOUBLELINKLIST_QUEUE_H__
 #define __DOUBLELINKLIST_QUEUE_H__
-
-#include "doubleLinkList.h"
+#include "common.h"
 
 typedef DoubleLinkList DoubleLinkListQueue;
 
@@ -21,7 +20,7 @@ int doubleLinkListQueueFront(DoubleLinkListQueue *queue, ELEMENTTYPE *data);
 int doubleLinkListQueueRear(DoubleLinkListQueue *queue, ELEMENTTYPE *data);
 
 /* 队列的元素个数 */
-int doubleLinkListQueueSize(DoubleLinkListQueue *queue, int *pSize);
+int doubleLinkListQueueGetSize(DoubleLinkListQueue *queue, int *pSize);
 
 /* 队列是否为空 */
 int doubleLinkListQueueIsEmpty(DoubleLinkListQueue *queue);

@@ -1,11 +1,7 @@
 #ifndef __DoubleLinkList_H__
 #define __DoubleLinkList_H__
 
-#define ELEMENTTYPE void *
-
-typedef struct DoubleLinkNode DoubleLinkNode;
-typedef struct DoubleLinkList DoubleLinkList;
-
+#include "common.h"
  
 /* 链表初始化 */
 int DoubleLinkListInit(DoubleLinkList **pList);
@@ -39,6 +35,15 @@ int DoubleLinkListAppointPosDelete(DoubleLinkList *pList, int pos);
 
 /* 链表删除任意的值 */
 int DoubleLinkListAppointDataDelete(DoubleLinkList *pList, ELEMENTTYPE data, int (*compareFunc)(ELEMENTTYPE, ELEMENTTYPE));
+
+/* 获取链表的头的元素 */
+int DoubleLinkListGetHeadPositionData(DoubleLinkList *pList, ELEMENTTYPE *data);
+
+/* 获取链表的尾部元素 */
+int DoubleLinkListGetTailPositionData(DoubleLinkList *pList, ELEMENTTYPE *data);
+
+/* 获取链表任意位置的元素 */
+int DoubleLinkListGetAppointPositionData(DoubleLinkList *pList, int pos, ELEMENTTYPE *data);
 
 /* 链表的释放 */
 int DoubleLinkListDestroy(DoubleLinkList *pList);
