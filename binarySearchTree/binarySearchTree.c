@@ -12,13 +12,24 @@ enum STATUS_CODE
     INVALID_ACCESS,
 };
 
-/* 二叉搜索树的前置声明 */
+/* 静态函数前置声明 */
+/* 创建二叉搜索树结点 */
 static BinarySearchNode * createBinarySearchTreeNode(ELEMENTTYPE data, BinarySearchNode * parent);
 
+/* 结点的度为2 */
+static int BinarySearchTreeNodeHasTwoChildrens(BinarySearchNode *node);
+/* 结点的度为1 */
+static int BinarySearchTreeNodeHasOneChildrens(BinarySearchNode *node);
+/* 结点的度为0 (叶子结点) */
+static int BinarySearchTreeNodeIsLeaf(BinarySearchNode *node);
+/* 结点的前驱结点 */
+static BinarySearchNode * BinarySearchTreeNodeGetPrecursor(BinarySearchNode *node);
+/* 结点的后继结点 */
+static BinarySearchNode * BinarySearchTreeNodeGetSuccessor(BinarySearchNode *node);
 
 
 /* 树的初始化 */
-int binarySearchTreeInit(BinarySearchTree **pTree, int (*compareFunc)(ELEMENTTYPE arg1, ELEMENTTYPE arg2))
+int binarySearchTreeInit(BinarySearchTree **pTree, int (*compareFunc)(ELEMENTTYPE arg1, ELEMENTTYPE arg2), int (*printFunc)(ELEMENTTYPE arg))
 {
     BinarySearchTree * tree = (BinarySearchTree *)malloc(sizeof(BinarySearchTree) * 1);
     if (tree == NULL)
@@ -36,9 +47,42 @@ int binarySearchTreeInit(BinarySearchTree **pTree, int (*compareFunc)(ELEMENTTYP
     /* 比较器 */
     tree->compareFunc = compareFunc;
 
+    /* 打印器 */
+    tree->printFunc = printFunc;
+    
     /* 二级指针解引用 */
     *pTree = tree;
     return ON_SUCCESS;
+}
+
+/* 结点的前驱结点 */
+static BinarySearchNode * BinarySearchTreeNodeGetPrecursor(BinarySearchNode *node)
+{
+
+}
+
+/* 结点的后继结点 */
+static BinarySearchNode * BinarySearchTreeNodeGetSuccessor(BinarySearchNode *node)
+{
+    
+}
+
+/* 结点的度为2 */
+static int BinarySearchTreeNodeHasTwoChildrens(BinarySearchNode *node)
+{
+    return node->left != NULL && node->right != NULL;
+}
+
+/* 结点的度为1 */
+static int BinarySearchTreeNodeHasOneChildrens(BinarySearchNode *node)
+{
+    return (node->left != NULL && node->right == NULL) || (node->left == NULL && node->right != NULL);
+}
+
+/* 结点的度为0 (叶子结点) */
+static int BinarySearchTreeNodeIsLeaf(BinarySearchNode *node)
+{
+    return node->left == NULL && node->right == NULL;
 }
 
 /* 创建二叉搜索树的结点 */
@@ -52,7 +96,7 @@ static BinarySearchNode * createBinarySearchTreeNode(ELEMENTTYPE data, BinarySea
     newNode->data = data;
     newNode->left = NULL;
     newNode->right = NULL;
-    newNode->parent = NULL;
+    newNode->parent = parent;
 
     return newNode;
 }

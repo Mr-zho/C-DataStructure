@@ -28,13 +28,28 @@ typedef struct BinarySearchTree
 
     /* 自定义比较器 */
     int (*compareFunc)(ELEMENTTYPE arg1, ELEMENTTYPE arg2);
+
+    /* 自定义打印器 */
+    int (*printFunc)(ELEMENTTYPE arg);
 } BinarySearchTree;
 
 
 /* 树的初始化 */
-int binarySearchTreeInit(BinarySearchTree **pTree,  int (*compareFunc)(ELEMENTTYPE arg1, ELEMENTTYPE arg2));
+int binarySearchTreeInit(BinarySearchTree **pTree,  int (*compareFunc)(ELEMENTTYPE arg1, ELEMENTTYPE arg2), int (*printFunc)(ELEMENTTYPE arg));
 
 /* 树的插入 */
 int binarySearchTreeInsert(BinarySearchTree *pTree, ELEMENTTYPE data);
+
+/* 树的前序遍历 */
+int binarySearchTreePreOrder(BinarySearchTree *pTree);
+
+/* 树的中序遍历 */
+int binarySearchTreeInOrder(BinarySearchTree *pTree);
+
+/* 树的后序遍历 */
+int binarySearchTreePostOrder(BinarySearchTree *pTree);
+
+/* 树的层序遍历 */
+int binarySearchTreeLevelOrder(BinarySearchTree *pTree);
 
 #endif
