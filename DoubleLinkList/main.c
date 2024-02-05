@@ -119,6 +119,15 @@ int main()
     DoubleLinkListForeach(list, printData);
     printf("\n");
 
+    int *headValue = NULL;
+    DoubleLinkListGetHeadPositionData(list, (void **)&headValue);
+    printf("headValue:%d\n", *headValue);
+    
+    int *tailValue = NULL;
+    DoubleLinkListGetTailPositionData(list, (void **)&tailValue);
+    printf("tailValue:%d\n", *tailValue);
+
+
     /* 链表释放 */
     DoubleLinkListDestroy(list);
     

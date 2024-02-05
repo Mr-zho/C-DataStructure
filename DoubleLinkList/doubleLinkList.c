@@ -404,3 +404,57 @@ int DoubleLinkListReverseForeach(DoubleLinkList *pList, int (*printFunc)(ELEMENT
     /* 退出条件是: 碰到虚拟头结点 */
     return ON_SUCCESS;
 }
+
+
+/* 获取链表的头的元素 */
+int DoubleLinkListGetHeadPositionData(DoubleLinkList *pList, ELEMENTTYPE *data)
+{
+    return DoubleLinkListGetAppointPositionData(pList, 0, data);
+}
+
+/* 获取链表的尾部元素 */
+int DoubleLinkListGetTailPositionData(DoubleLinkList *pList, ELEMENTTYPE *data)
+{
+    return DoubleLinkListGetAppointPositionData(pList, pList->size - 1, data);
+}
+
+/* 获取链表任意位置的元素 */
+int DoubleLinkListGetAppointPositionData(DoubleLinkList *pList, int pos, ELEMENTTYPE *data)
+{
+    /* 判空 */
+    if (pList == NULL)
+    {
+        return NULL_PTR;
+    }
+
+    /* 判断位置的合法性 */
+    if (pos < 0 || pos > pList->size - 1)
+    {
+        return INVALID_ACCESS;
+    }
+
+    DoubleLinkNode * travelNode = pList->head->next;
+
+    /* 取最后一个元素 */
+    if (pos == pList->size - 1)
+    {
+        travelNode = pList->tail;
+    }
+    else
+    {
+        while (pos)
+        {
+            travelNode = travelNode->next;
+            pos--;
+        }
+        /* 出了这个循环, travelNode到底是啥? */
+        /* travelNode 就是我要找的结点 */
+    }
+
+    if (data)
+    {
+        *data = travelNode->data;
+    }
+
+    return ON_SUCCESS;
+}

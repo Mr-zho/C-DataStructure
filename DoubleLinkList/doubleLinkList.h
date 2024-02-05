@@ -42,4 +42,13 @@ int DoubleLinkListAppointDataDelete(DoubleLinkList *pList, ELEMENTTYPE data, int
 
 /* 链表的释放 */
 int DoubleLinkListDestroy(DoubleLinkList *pList);
+
+/* 获取链表的头的元素 */
+int DoubleLinkListGetHeadPositionData(DoubleLinkList *pList, ELEMENTTYPE *data);
+
+/* 获取链表的尾部元素 */
+int DoubleLinkListGetTailPositionData(DoubleLinkList *pList, ELEMENTTYPE *data);
+
+/* 获取链表任意位置的元素 */
+int DoubleLinkListGetAppointPositionData(DoubleLinkList *pList, int pos, ELEMENTTYPE *data);
 #endif
