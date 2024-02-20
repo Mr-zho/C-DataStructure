@@ -54,4 +54,7 @@ int binarySearchTreeLevelOrder(BinarySearchTree *pTree);
 
 /* 树的高度 */
 int binarySearchTreeGetHeight(BinarySearchTree *pTree, int *pHeight);
+
+/* 树的销毁 */
+int binarySearchTreeDestroy(BinarySearchTree *pTree);
 #endif

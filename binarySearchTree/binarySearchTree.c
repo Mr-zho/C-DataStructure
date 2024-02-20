@@ -439,3 +439,69 @@ int binarySearchTreeGetHeight(BinarySearchTree *pTree, int *pHeight)
 
     return ON_SUCCESS;
 }
+
+/* 树的销毁 */
+int binarySearchTreeDestroy(BinarySearchTree *pTree)
+{
+    /* 只需要遍历到所有的结点 & 释放 */
+#if 1
+    if (pTree == NULL)
+    {
+        return NULL_PTR;
+    }
+
+    if (pTree->root == NULL)
+    {
+        return ON_SUCCESS;
+    }
+
+
+    DoubleLinkListQueue *queue = NULL;
+    doubleLinkListQueueInit(&queue);
+
+    /* 根结点入队 */
+    doubleLinkListQueuePush(queue, pTree->root);
+
+    BinarySearchNode * frontVal = NULL;
+    while(!doubleLinkListQueueIsEmpty(queue))
+    {
+        /* 取出队头元素 */
+        doubleLinkListQueueFront(queue, (void **)&frontVal);
+        /* 出队 */
+        doubleLinkListQueuePop(queue);
+
+        /* 左子树入队 */
+        if (frontVal->left != NULL)
+        {
+            doubleLinkListQueuePush(queue, frontVal->left);
+        }
+
+        /* 右子树入队 */
+        if (frontVal->right != NULL)
+        {
+            doubleLinkListQueuePush(queue, frontVal->right);
+        }
+
+        /* 释放结点 */
+        if (frontVal != NULL)
+        {
+            free(frontVal);
+            frontVal = NULL;
+        }
+    }
+    /* 释放队列 */
+    doubleLinkListQueueDestroy(queue);
+
+    /* 释放树 */
+    if (pTree != NULL)
+    {
+        free(pTree);
+        pTree = NULL;
+    }
+
+    return ON_SUCCESS;
+#else
+    /* 使用中序遍历的方式去释放结点信息 */
+
+#endif
+}
