@@ -569,22 +569,39 @@ static int binarySearchTreeDeleteNode(BinarySearchTree *pTree, BinarySearchNode 
     /* 度为1 */
     BinarySearchNode * childNode = delNode->left != NULL ? delNode->left : delNode->right;
 
+    BinarySearchNode * freeNode = NULL;
     if (childNode != NULL)
     {
         /* 度为1 */
-        
+        childNode->parent = delNode->parent;
 
+        if (delNode->parent == NULL)
+        {
+            /* 度为1 且是根结点 */
+            pTree->root = childNode;
+
+            freeNode = delNode;
+        }
+        else
+        {
+            if (delNode == delNode->parent->left)
+            {
+                delNode->parent->left = childNode;
+            }
+            else if (delNode == delNode->parent->right)
+            {
+                delNode->parent->right = childNode;
+            }
+            freeNode = delNode;
+        }
     }
     else
     {
         if (delNode->parent == NULL)
         {
             /* 度为0 && 根结点 */
-            if (delNode != NULL)
-            {
-                free(delNode);
-                delNode = NULL;
-            }
+            freeNode = delNode;
+          
             /* 根结点置为NULL. */
             pTree->root = NULL;
         }
@@ -599,15 +616,16 @@ static int binarySearchTreeDeleteNode(BinarySearchTree *pTree, BinarySearchNode 
             {
                 delNode->parent->right = NULL;
             }
-
-            if (delNode != NULL)
-            {
-                free(delNode);
-                delNode = NULL;
-            }
+            freeNode = delNode;
         }
     }
 
+    /* 释放堆空间 */
+    if (freeNode != NULL)
+    {
+        free(freeNode);
+        freeNode = NULL;
+    }
 
     return ret;
 }
