@@ -505,3 +505,46 @@ int binarySearchTreeDestroy(BinarySearchTree *pTree)
 
 #endif
 }
+
+
+/* 树的删除 */
+int binarySearchTreeDelete(BinarySearchTree *pTree, ELEMENTTYPE data)
+{
+    if (pTree == NULL)
+    {
+        return NULL_PTR;
+    }
+
+    BinarySearchNode * travelNode = pTree->root;
+    int cmp = 0;
+    while (travelNode != NULL)
+    {
+        cmp = pTree->compareFunc(data, travelNode->data);
+        if (cmp < 0)
+        {
+            travelNode = travelNode->left;
+        }
+        else if (cmp == 0)
+        {
+            return 1;
+        }
+        else if (cmp > 0)
+        {
+            travelNode = travelNode->right;
+        }
+    }
+    /* 退出循环: 不存在. */
+    return 0;
+}
+
+
+/* 树是否存在指定元素 */
+int binarySearchTreeIsContainVal(BinarySearchTree *pTree, ELEMENTTYPE data)
+{
+    if (pTree == NULL)
+    {
+        return NULL_PTR;
+    }
+
+
+}

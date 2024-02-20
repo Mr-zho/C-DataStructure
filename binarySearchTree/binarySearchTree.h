@@ -57,4 +57,10 @@ int binarySearchTreeGetHeight(BinarySearchTree *pTree, int *pHeight);
 
 /* 树的销毁 */
 int binarySearchTreeDestroy(BinarySearchTree *pTree);
+
+/* 树的删除 */
+int binarySearchTreeDelete(BinarySearchTree *pTree, ELEMENTTYPE data);
+
+/* 树是否存在指定元素 */
+int binarySearchTreeIsContainVal(BinarySearchTree *pTree, ELEMENTTYPE data);
 #endif
