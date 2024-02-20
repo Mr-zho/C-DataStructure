@@ -33,6 +33,8 @@ static int binarySearchTreeInnerPreOrder(BinarySearchTree *pTree, BinarySearchNo
 static int binarySearchTreeInnerInOrder(BinarySearchTree *pTree, BinarySearchNode * travelNode);
 /* 后序遍历 */
 static int binarySearchTreeInnerPostOrder(BinarySearchTree *pTree, BinarySearchNode * travelNode);
+/* 根据指定的值获取对应的结点 */
+static BinarySearchNode * baseAppointValGetBSTreeNode(BinarySearchTree *pTree, ELEMENTTYPE data);
 
 
 /* 树的初始化 */
@@ -508,13 +510,19 @@ int binarySearchTreeDestroy(BinarySearchTree *pTree)
 
 
 /* 树的删除 */
-int binarySearchTreeDelete(BinarySearchTree *pTree, ELEMENTTYPE data)
+int binarySearchTreeIsContainVal(BinarySearchTree *pTree, ELEMENTTYPE data)
 {
     if (pTree == NULL)
     {
         return NULL_PTR;
     }
 
+    return baseAppointValGetBSTreeNode(pTree, data) == NULL ? 0 : 1;
+}
+
+
+static BinarySearchNode * baseAppointValGetBSTreeNode(BinarySearchTree *pTree, ELEMENTTYPE data)
+{
     BinarySearchNode * travelNode = pTree->root;
     int cmp = 0;
     while (travelNode != NULL)
@@ -526,25 +534,97 @@ int binarySearchTreeDelete(BinarySearchTree *pTree, ELEMENTTYPE data)
         }
         else if (cmp == 0)
         {
-            return 1;
+            return travelNode;
         }
         else if (cmp > 0)
         {
             travelNode = travelNode->right;
         }
     }
-    /* 退出循环: 不存在. */
-    return 0;
+    /* 退出循环: travelNode == NULL */
+    return travelNode;
 }
 
+static int binarySearchTreeDeleteNode(BinarySearchTree *pTree, BinarySearchNode * delNode)
+{
+    int ret = 0;
+    if (delNode == NULL)
+    {
+        return ret;
+    }
+
+    /* 度为2 */
+    if (BinarySearchTreeNodeHasTwoChildrens(delNode))
+    {
+        /* 获取当前结点的前驱结点 */
+        BinarySearchNode * preNode = BinarySearchTreeNodeGetPrecursor(delNode);
+        /* 前驱结点的值 赋值到 度为2的结点 */
+        delNode->data = preNode->data;
+
+        delNode = preNode;
+    }
+    /* 程序到这个地方，要删除的结点要么是度为1 要么是度为0. */
+
+    
+    /* 度为1 */
+    BinarySearchNode * childNode = delNode->left != NULL ? delNode->left : delNode->right;
+
+    if (childNode != NULL)
+    {
+        /* 度为1 */
+        
+
+    }
+    else
+    {
+        if (delNode->parent == NULL)
+        {
+            /* 度为0 && 根结点 */
+            if (delNode != NULL)
+            {
+                free(delNode);
+                delNode = NULL;
+            }
+            /* 根结点置为NULL. */
+            pTree->root = NULL;
+        }
+        else
+        {
+            /* 度为0 */
+            if (delNode == delNode->parent->left)
+            {
+                delNode->parent->left = NULL;
+            }
+            else if (delNode == delNode->parent->right)
+            {
+                delNode->parent->right = NULL;
+            }
+
+            if (delNode != NULL)
+            {
+                free(delNode);
+                delNode = NULL;
+            }
+        }
+    }
+
+
+    return ret;
+}
 
 /* 树是否存在指定元素 */
-int binarySearchTreeIsContainVal(BinarySearchTree *pTree, ELEMENTTYPE data)
+int binarySearchTreeDelete(BinarySearchTree *pTree, ELEMENTTYPE data)
 {
     if (pTree == NULL)
     {
         return NULL_PTR;
     }
 
-
+#if 0
+    BinarySearchNode * delNode = baseAppointValGetBSTreeNode(pTree, data);
+    binarySearchTreeDeleteNode(pTree, delNode);
+#else
+    binarySearchTreeDeleteNode(pTree, baseAppointValGetBSTreeNode(pTree, data));
+#endif
+    return ON_SUCCESS;
 }
