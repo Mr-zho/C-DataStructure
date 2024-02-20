@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include "doubleLinkListQueue.h"
 
 /* 状态码 */
 enum STATUS_CODE
@@ -199,5 +200,53 @@ int binarySearchTreePostOrder(BinarySearchTree *pTree)
 /* 树的层序遍历 */
 int binarySearchTreeLevelOrder(BinarySearchTree *pTree)
 {
-    
+    if (pTree == NULL)
+    {
+        return NULL_PTR;
+    }
+
+#if 1
+    if (pTree->root == NULL)
+    {
+        return ON_SUCCESS;
+    }
+#else
+    if (pTree->size == 0)
+    {
+        return ON_SUCCESS;
+    }
+#endif
+
+    DoubleLinkListQueue *queue = NULL;
+    doubleLinkListQueueInit(&queue);
+
+    doubleLinkListQueuePush(queue, pTree->root);
+
+    BinarySearchNode * frontVal = NULL;
+    while(!doubleLinkListQueueIsEmpty(queue))
+    {
+        /* 取出队头元素 */
+        doubleLinkListQueueFront(queue, (void **)&frontVal);
+        /* 出队 */
+        doubleLinkListQueuePop(queue);
+        /* 打印器 */
+        pTree->printFunc(frontVal->data);
+
+        /* 左子树入队 */
+        if (frontVal->left != NULL)
+        {
+            doubleLinkListQueuePush(queue, frontVal->left);
+        }
+
+        /* 右子树入队 */
+        if (frontVal->right != NULL)
+        {
+            doubleLinkListQueuePush(queue, frontVal->right);
+        }
+    }
+
+    /* 释放队列 */
+    doubleLinkListQueueDestroy(queue);
+
+    return ON_SUCCESS;
 }
