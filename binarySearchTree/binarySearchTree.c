@@ -193,11 +193,11 @@ static int binarySearchTreeInnerPreOrder(BinarySearchTree *pTree, BinarySearchNo
     }
 
     /* 根结点 */
-    pTree->printFunc(travelNode);
+    pTree->printFunc(travelNode->data);
     /* 左子树 */
-    binarySearchTreePreOrder(travelNode->left);
+    binarySearchTreeInnerPreOrder(pTree, travelNode->left);
     /* 右子树 */
-    binarySearchTreePreOrder(travelNode->right);
+    binarySearchTreeInnerPreOrder(pTree, travelNode->right);
 
     return ON_SUCCESS;
 }
@@ -223,11 +223,11 @@ static int binarySearchTreeInnerInOrder(BinarySearchTree *pTree, BinarySearchNod
     }
 
     /* 左子树 */
-    binarySearchTreePreOrder(travelNode->left);
+    binarySearchTreeInnerInOrder(pTree, travelNode->left);
     /* 根结点 */
-    pTree->printFunc(travelNode);
+    pTree->printFunc(travelNode->data);
     /* 右子树 */
-    binarySearchTreePreOrder(travelNode->right);
+    binarySearchTreeInnerInOrder(pTree, travelNode->right);
 
     return ON_SUCCESS;
 }
@@ -254,11 +254,11 @@ static int binarySearchTreeInnerPostOrder(BinarySearchTree *pTree, BinarySearchN
     }
 
     /* 左子树 */
-    binarySearchTreePreOrder(travelNode->left);
+    binarySearchTreeInnerPostOrder(pTree, travelNode->left);
     /* 右子树 */
-    binarySearchTreePreOrder(travelNode->right);
+    binarySearchTreeInnerPostOrder(pTree, travelNode->right);
     /* 根结点 */
-    pTree->printFunc(travelNode);
+    pTree->printFunc(travelNode->data);
 
     return ON_SUCCESS;
 }
