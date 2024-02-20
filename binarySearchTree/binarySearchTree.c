@@ -142,7 +142,7 @@ static BinarySearchNode * createBinarySearchTreeNode(ELEMENTTYPE data, BinarySea
     BinarySearchNode *newNode = (BinarySearchNode *)malloc(sizeof(BinarySearchNode) * 1);
     if (newNode == NULL)
     {
-        return MALLOC_ERROR;
+        return NULL;
     }
     newNode->data = data;
     newNode->left = NULL;
@@ -175,6 +175,9 @@ int binarySearchTreeInsert(BinarySearchTree *pTree, ELEMENTTYPE data)
         {
             return MALLOC_ERROR;
         }
+        /* 树的元素个数加一. */
+        (pTree->size)++;
+        
         return ON_SUCCESS;
     }
 #endif
@@ -406,8 +409,6 @@ int binarySearchTreeGetHeight(BinarySearchTree *pTree, int *pHeight)
         doubleLinkListQueueFront(queue, (void **)&frontVal);
         /* 出队 */
         doubleLinkListQueuePop(queue);
-        /* 打印器 */
-        pTree->printFunc(frontVal->data);
 
         /* 当前层的结点个数减一 */
         levelSize--;
@@ -627,6 +628,9 @@ static int binarySearchTreeDeleteNode(BinarySearchTree *pTree, BinarySearchNode 
         freeNode = NULL;
     }
 
+    /* 树的元素个数减一. */
+    (pTree->size)--;
+
     return ret;
 }
 
@@ -644,5 +648,17 @@ int binarySearchTreeDelete(BinarySearchTree *pTree, ELEMENTTYPE data)
 #else
     binarySearchTreeDeleteNode(pTree, baseAppointValGetBSTreeNode(pTree, data));
 #endif
+    return ON_SUCCESS;
+}
+
+/* 树的元素个数 */
+int binarySearchTreeGetSize(BinarySearchTree *pTree, int *pSize)
+{
+    if (pTree == NULL || pSize == NULL)
+    {
+        return NULL_PTR;
+    }
+    *pSize = pTree->size;
+
     return ON_SUCCESS;
 }

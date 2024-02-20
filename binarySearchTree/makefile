@@ -25,8 +25,7 @@ all:
 
 clean:
 	$(RM) $(OBJS) $(TARGET)
-	make -C $(SO_DIR) clean
-	make -C $(A_DIR) clean
+
 	
 # wildcard : 匹配文件 			(获取指定目录下所有的.c文件)
 # patsubst : 模式匹配与替换 	（指定目录下所有的.c文件替换成.o文件）
