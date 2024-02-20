@@ -63,15 +63,57 @@ int binarySearchTreeInit(BinarySearchTree **pTree, int (*compareFunc)(ELEMENTTYP
 }
 
 /* 结点的前驱结点 */
+/* 前驱结点是: 当前结点中序遍历(有序的)的前一个结点 */
 static BinarySearchNode * BinarySearchTreeNodeGetPrecursor(BinarySearchNode *node)
 {
+    BinarySearchNode * travelNode = NULL;
+    if (node->left != NULL)
+    {
+        travelNode = node->left;
+        while (travelNode->right != NULL)
+        {
+            /* node->left->right->right->...... */
+            travelNode = travelNode->right;
+        }
+        return travelNode;
+    }
 
+    /* 如果程序执行到这里, 说明: 左子树一定为空 */
+    /* 只能够往上面(parent->parent->parent)找 */
+
+    travelNode = node;
+    while (travelNode->parent != NULL && travelNode == travelNode->parent->left)
+    {
+        travelNode = travelNode->parent;
+    }
+    /* 退出这个循环: case1.travelNode->parent == NULL case2.当前结点是父结点的右边 */
+    return travelNode->parent;
 }
 
 /* 结点的后继结点 */
+/* 后继结点是: 当前结点中序遍历(有序的)的后一个结点 */
 static BinarySearchNode * BinarySearchTreeNodeGetSuccessor(BinarySearchNode *node)
 {
-    
+    BinarySearchNode * travelNode = NULL;
+    if (node->right != NULL)
+    {
+        travelNode = node->right;
+        while (travelNode->left != NULL)
+        {
+            travelNode = travelNode->left;
+        }
+        return travelNode;
+    }
+
+    /* 程序执行到这个地方, 说明: 右子树一定为空 */
+    /* 只能够往上面走(parent->parent->parent...)找 */
+    travelNode = node;
+    while (travelNode->parent != NULL &&  travelNode == travelNode->parent->right)
+    {
+        travelNode = travelNode->parent;
+    }
+    /* 退出循环条件: case1.travelNode->parent == NULL case 2. travelNode == node->parent->left */
+    return travelNode->parent;
 }
 
 /* 结点的度为2 */
