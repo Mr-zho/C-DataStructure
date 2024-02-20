@@ -52,4 +52,6 @@ int binarySearchTreePostOrder(BinarySearchTree *pTree);
 /* 树的层序遍历 */
 int binarySearchTreeLevelOrder(BinarySearchTree *pTree);
 
+/* 树的高度 */
+int binarySearchTreeGetHeight(BinarySearchTree *pTree, int *pHeight);
 #endif

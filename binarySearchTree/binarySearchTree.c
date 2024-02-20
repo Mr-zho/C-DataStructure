@@ -27,6 +27,12 @@ static int BinarySearchTreeNodeIsLeaf(BinarySearchNode *node);
 static BinarySearchNode * BinarySearchTreeNodeGetPrecursor(BinarySearchNode *node);
 /* 结点的后继结点 */
 static BinarySearchNode * BinarySearchTreeNodeGetSuccessor(BinarySearchNode *node);
+/* 前序遍历 */
+static int binarySearchTreeInnerPreOrder(BinarySearchTree *pTree, BinarySearchNode * travelNode);
+/* 中序遍历 */
+static int binarySearchTreeInnerInOrder(BinarySearchTree *pTree, BinarySearchNode * travelNode);
+/* 后序遍历 */
+static int binarySearchTreeInnerPostOrder(BinarySearchTree *pTree, BinarySearchNode * travelNode);
 
 
 /* 树的初始化 */
@@ -178,26 +184,99 @@ int binarySearchTreeInsert(BinarySearchTree *pTree, ELEMENTTYPE data)
     return ON_SUCCESS;
 }
 
+/* 前序遍历 */
+static int binarySearchTreeInnerPreOrder(BinarySearchTree *pTree, BinarySearchNode * travelNode)
+{
+    if (travelNode == NULL)
+    {
+        return ON_SUCCESS;
+    }
+
+    /* 根结点 */
+    pTree->printFunc(travelNode);
+    /* 左子树 */
+    binarySearchTreePreOrder(travelNode->left);
+    /* 右子树 */
+    binarySearchTreePreOrder(travelNode->right);
+
+    return ON_SUCCESS;
+}
 
 /* 树的前序遍历 */
+/* 根结点, 左子树, 右子树 */
 int binarySearchTreePreOrder(BinarySearchTree *pTree)
 {
-    
+    if (pTree == NULL)
+    {
+        return NULL_PTR;
+    }
+
+    return binarySearchTreeInnerPreOrder(pTree, pTree->root);
 }
 
 /* 树的中序遍历 */
+static int binarySearchTreeInnerInOrder(BinarySearchTree *pTree, BinarySearchNode * travelNode)
+{
+    if (travelNode == NULL)
+    {
+        return ON_SUCCESS;
+    }
+
+    /* 左子树 */
+    binarySearchTreePreOrder(travelNode->left);
+    /* 根结点 */
+    pTree->printFunc(travelNode);
+    /* 右子树 */
+    binarySearchTreePreOrder(travelNode->right);
+
+    return ON_SUCCESS;
+}
+
+
+/* 树的中序遍历 */
+/* 左子树, 根结点, 右子树 */
 int binarySearchTreeInOrder(BinarySearchTree *pTree)
 {
-    
+    if (pTree == NULL)
+    {
+        return NULL_PTR;
+    }
+
+    return binarySearchTreeInnerInOrder(pTree, pTree->root);
+}
+
+/* 树的中序遍历 */
+static int binarySearchTreeInnerPostOrder(BinarySearchTree *pTree, BinarySearchNode * travelNode)
+{
+    if (travelNode == NULL)
+    {
+        return ON_SUCCESS;
+    }
+
+    /* 左子树 */
+    binarySearchTreePreOrder(travelNode->left);
+    /* 右子树 */
+    binarySearchTreePreOrder(travelNode->right);
+    /* 根结点 */
+    pTree->printFunc(travelNode);
+
+    return ON_SUCCESS;
 }
 
 /* 树的后序遍历 */
+/* 左子树, 右子树, 根结点 */
 int binarySearchTreePostOrder(BinarySearchTree *pTree)
 {
+    if (pTree == NULL)
+    {
+        return NULL_PTR;
+    }
     
+    return binarySearchTreeInnerPostOrder(pTree, pTree->root);
 }
 
 /* 树的层序遍历 */
+/* */
 int binarySearchTreeLevelOrder(BinarySearchTree *pTree)
 {
     if (pTree == NULL)
@@ -247,6 +326,74 @@ int binarySearchTreeLevelOrder(BinarySearchTree *pTree)
 
     /* 释放队列 */
     doubleLinkListQueueDestroy(queue);
+
+    return ON_SUCCESS;
+}
+
+/* 树的高度 */
+int binarySearchTreeGetHeight(BinarySearchTree *pTree, int *pHeight)
+{
+    if (pTree == NULL || pHeight == NULL)
+    {
+        return NULL_PTR;
+    }
+
+    /* 空树 */
+    if (pTree->root == NULL)
+    {
+        /* 解引用 */
+        *pHeight = 0;
+        return ON_SUCCESS;
+    }
+
+    /* 程序到这个地方, 根结点不为NULL. 一定有结点. */
+
+    int height = 0;
+    DoubleLinkListQueue *queue = NULL;
+    doubleLinkListQueueInit(&queue);
+
+    doubleLinkListQueuePush(queue, pTree->root);
+    int levelSize = 1;
+
+    BinarySearchNode * frontVal = NULL;
+    while(!doubleLinkListQueueIsEmpty(queue))
+    {
+        /* 取出队头元素 */
+        doubleLinkListQueueFront(queue, (void **)&frontVal);
+        /* 出队 */
+        doubleLinkListQueuePop(queue);
+        /* 打印器 */
+        pTree->printFunc(frontVal->data);
+
+        /* 当前层的结点个数减一 */
+        levelSize--;
+
+        /* 左子树入队 */
+        if (frontVal->left != NULL)
+        {
+            doubleLinkListQueuePush(queue, frontVal->left);
+        }
+
+        /* 右子树入队 */
+        if (frontVal->right != NULL)
+        {
+            doubleLinkListQueuePush(queue, frontVal->right);
+        }
+
+        if (levelSize == 0)
+        {
+            /* 树的高度加一. */
+            height++;
+            /* 当前层的结点已经全部结束了 */
+            doubleLinkListQueueGetSize(queue, &levelSize);
+        }
+    }
+
+    /* 释放队列 */
+    doubleLinkListQueueDestroy(queue);
+
+    /* 解引用 */
+    *pHeight = height;
 
     return ON_SUCCESS;
 }
