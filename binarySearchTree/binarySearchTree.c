@@ -86,7 +86,7 @@ static int BinarySearchTreeNodeIsLeaf(BinarySearchNode *node)
 }
 
 /* 创建二叉搜索树的结点 */
-static BinarySearchNode * createBinarySearchTreeNode(ELEMENTTYPE data, BinarySearchNode * parent);
+static BinarySearchNode * createBinarySearchTreeNode(ELEMENTTYPE data, BinarySearchNode * parent)
 {
     BinarySearchNode *newNode = (BinarySearchNode *)malloc(sizeof(BinarySearchNode) * 1);
     if (newNode == NULL)
@@ -175,4 +175,29 @@ int binarySearchTreeInsert(BinarySearchTree *pTree, ELEMENTTYPE data)
     (pTree->size)++;
 
     return ON_SUCCESS;
+}
+
+
+/* 树的前序遍历 */
+int binarySearchTreePreOrder(BinarySearchTree *pTree)
+{
+    
+}
+
+/* 树的中序遍历 */
+int binarySearchTreeInOrder(BinarySearchTree *pTree)
+{
+    
+}
+
+/* 树的后序遍历 */
+int binarySearchTreePostOrder(BinarySearchTree *pTree)
+{
+    
+}
+
+/* 树的层序遍历 */
+int binarySearchTreeLevelOrder(BinarySearchTree *pTree)
+{
+    
 }
