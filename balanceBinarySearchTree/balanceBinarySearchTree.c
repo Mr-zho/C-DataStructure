@@ -41,6 +41,12 @@ static int BalanceBinarySearchTreeNodeFactor(BalanceBinarySearchNode *node);
 static int BalanceBinarySearchTreeNodeIsBalanced(BalanceBinarySearchNode *node);
 /* 更新高度 */
 static int BalanceBinarySearchTreeNodeUpdateHeight(BalanceBinarySearchNode *node);
+/* 当前结点是父结点的左子树 */
+static int BalanceBinarySearchTreeNodeIsLeft(BalanceBinarySearchNode *node);
+/* 当前结点是父结点的右子树 */
+static int BalanceBinarySearchTreeNodeIsRight(BalanceBinarySearchNode *node);
+/* 获取当前结点中较高的子结点 */
+static BalanceBinarySearchNode * BalanceBinarySearchTreeGetTallerNode(BalanceBinarySearchNode *node);
 
 /* 树的初始化 */
 int balanceBinarySearchTreeInit(BalanceBinarySearchTree **pTree, int (*compareFunc)(ELEMENTTYPE arg1, ELEMENTTYPE arg2), int (*printFunc)(ELEMENTTYPE arg))
@@ -155,6 +161,62 @@ static int BalanceBinarySearchTreeNodeFactor(BalanceBinarySearchNode *node)
 static int BalanceBinarySearchTreeNodeIsBalanced(BalanceBinarySearchNode *node)
 {
     return abs(BalanceBinarySearchTreeNodeFactor(node)) <= 1;
+}
+
+/* 当前结点是父结点的左子树 */
+static int BalanceBinarySearchTreeNodeIsLeft(BalanceBinarySearchNode *node)
+{
+#if 0
+    /* 根结点 */
+    if (node->parent == NULL)
+    {
+        return 0;
+    }
+#endif
+    return (node->parent != NULL) && (node == node->parent->left);
+}
+
+/* 当前结点是父结点的右子树 */
+static int BalanceBinarySearchTreeNodeIsRight(BalanceBinarySearchNode *node)
+{
+#if 0
+    /* 根结点 */
+    if (node->parent == NULL)
+    {
+        return 0;
+    } 
+#endif
+    return (node->parent != NULL) && (node == node->parent->right);
+}
+
+/* 获取当前结点中较高的子结点 */
+static BalanceBinarySearchNode * BalanceBinarySearchTreeGetTallerNode(BalanceBinarySearchNode *node)
+{
+    /* 左子树的高度 */
+    int leftHeight = node->left == NULL ? 0 : node->left->height;
+    /* 右子树的高度 */
+    int rightHeight = node->right == NULL ? 0 : node->right->height;
+
+    if (leftHeight > rightHeight)
+    {
+        return node->left;
+    }
+    else if (leftHeight < rightHeight)
+    {
+        return node->right;
+    }
+    else 
+    {
+        // leftHeight == rightHeight
+        if (BalanceBinarySearchTreeNodeIsLeft(node))
+        {
+            return node->left;
+        }
+        else
+        {
+            return node->right;
+        }
+    }
 }
 
 /* 取两数之间较大的一个 */
@@ -627,11 +689,11 @@ static int balanceBinarySearchTreeDeleteNode(BalanceBinarySearchTree *pTree, Bal
         }
         else
         {
-            if (delNode == delNode->parent->left)
+            if (BalanceBinarySearchTreeNodeIsLeft(delNode))
             {
                 delNode->parent->left = childNode;
             }
-            else if (delNode == delNode->parent->right)
+            else if (BalanceBinarySearchTreeNodeIsRight(delNode))
             {
                 delNode->parent->right = childNode;
             }
@@ -651,11 +713,11 @@ static int balanceBinarySearchTreeDeleteNode(BalanceBinarySearchTree *pTree, Bal
         else
         {
             /* 度为0 */
-            if (delNode == delNode->parent->left)
+            if (BalanceBinarySearchTreeNodeIsLeft(delNode))
             {
                 delNode->parent->left = NULL;
             }
-            else if (delNode == delNode->parent->right)
+            else if (BalanceBinarySearchTreeNodeIsRight(delNode))
             {
                 delNode->parent->right = NULL;
             }
