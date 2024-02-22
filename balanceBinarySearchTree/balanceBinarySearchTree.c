@@ -144,19 +144,37 @@ static int BalanceBinarySearchTreeNodeIsLeaf(BalanceBinarySearchNode *node)
 /* 平衡二叉搜索树结点平衡因子 */
 static int BalanceBinarySearchTreeNodeFactor(BalanceBinarySearchNode *node)
 {
-    
+    /* 左子树的高度 */
+    int leftHeight = node->left == NULL ? 0 : node->left->height;
+    /* 右子树的高度 */
+    int rightHeight = node->right == NULL ? 0 : node->right->height;
+    return leftHeight - rightHeight;
 }
 
 /* 判断平衡二叉搜索树结点是否平衡 */
 static int BalanceBinarySearchTreeNodeIsBalanced(BalanceBinarySearchNode *node)
 {
-    return BalanceBinarySearchTreeNodeFactor(node) <= 1;
+    return abs(BalanceBinarySearchTreeNodeFactor(node)) <= 1;
+}
+
+/* 取两数之间较大的一个 */
+static int tmpMax(int val1, int val2)
+{
+    return val1 - val2 >= 0 ? val1 : val2; 
 }
 
 /* 更新高度 */
 static int BalanceBinarySearchTreeNodeUpdateHeight(BalanceBinarySearchNode *node)
 {
+    /* 左子树的高度 */
+    int leftHeight = node->left == NULL ? 0 : node->left->height;
+    /* 右子树的高度 */
+    int rightHeight = node->right == NULL ? 0 : node->right->height;
 
+    /* 直接更新高度 */
+    node->height = 1 + tmpMax(leftHeight, rightHeight);
+    
+    return ON_SUCCESS;
 }
 
 /* 创建二叉搜索树的结点 */
