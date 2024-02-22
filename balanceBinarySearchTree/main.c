@@ -2,7 +2,7 @@
 #include "balanceBinarySearchTree.h"
 
 
-#define BUFFER_SIZE 6
+#define BUFFER_SIZE 10
 
 /* 比较器 */
 int comparFuncBasic(void *arg1, void *arg2)
@@ -26,27 +26,27 @@ int printFuncBasic(void *arg)
 
 int main()
 {
-    #if 0
-    BinarySearchTree * tree = NULL;
-    binarySearchTreeInit(&tree, comparFuncBasic, printFuncBasic);
+    #if 1
+    BalanceBinarySearchTree * tree = NULL;
+    balanceBinarySearchTreeInit(&tree, comparFuncBasic, printFuncBasic);
 
-    /* 17 6 23 48 5 11 */
-    int nums[BUFFER_SIZE] = {17, 6, 23, 48, 5, 11};
+    /*  */
+    int nums[BUFFER_SIZE] = {13, 14, 15, 12, 11, 17, 16, 8, 9, 1};
     for (int idx = 0; idx < BUFFER_SIZE; idx++)
     {
-        binarySearchTreeInsert(tree, (void *)&nums[idx]);
+        balanceBinarySearchTreeInsert(tree, (void *)&nums[idx]);
     }
 
     int size = 0;
-    binarySearchTreeGetSize(tree, &size);
+    balanceBinarySearchTreeGetSize(tree, &size);
     printf("size:%d\n", size);
 
     int height = 0;
-    binarySearchTreeGetHeight(tree, &height);
+    balanceBinarySearchTreeGetHeight(tree, &height);
     printf("height:%d\n", height);
 
     /* 层序遍历 */
-    binarySearchTreeLevelOrder(tree);
+    balanceBinarySearchTreeLevelOrder(tree);
     printf("\n");
     #endif
 

@@ -47,6 +47,18 @@ static int BalanceBinarySearchTreeNodeIsLeft(BalanceBinarySearchNode *node);
 static int BalanceBinarySearchTreeNodeIsRight(BalanceBinarySearchNode *node);
 /* 获取当前结点中较高的子结点 */
 static BalanceBinarySearchNode * BalanceBinarySearchTreeGetTallerNode(BalanceBinarySearchNode *node);
+/* 插入结点需要做的调整 */
+static int insertNodeAfter(BalanceBinarySearchTree *pTree, BalanceBinarySearchNode * node);
+/* 删除结点需要做的调整 */
+static int removeNodeAfter(BalanceBinarySearchTree *pTree, BalanceBinarySearchNode * node);
+/* 调整平衡 */
+static int BalanceBinarySearchTreeNodeAdjustBalance(BalanceBinarySearchTree *pTree, BalanceBinarySearchNode *node);
+/* 左旋 */
+static int BalanceBinarySearchTreeNodeRotateLeft(BalanceBinarySearchTree *pTree, BalanceBinarySearchNode *grand);
+/* 右旋 */
+static int BalanceBinarySearchTreeNodeRotateRight(BalanceBinarySearchTree *pTree, BalanceBinarySearchNode *grand);
+/* 统一旋转操作 */
+static int BalanceBinarySearchTreeNodeAfterRotate(BalanceBinarySearchTree *pTree, BalanceBinarySearchNode *grand, BalanceBinarySearchNode *parent, BalanceBinarySearchNode *child);
 
 /* 树的初始化 */
 int balanceBinarySearchTreeInit(BalanceBinarySearchTree **pTree, int (*compareFunc)(ELEMENTTYPE arg1, ELEMENTTYPE arg2), int (*printFunc)(ELEMENTTYPE arg))
@@ -256,6 +268,208 @@ static BalanceBinarySearchNode * createBalanceBinarySearchTreeNode(ELEMENTTYPE d
     return newNode;
 }
 
+static int BalanceBinarySearchTreeNodeAfterRotate(BalanceBinarySearchTree *pTree, BalanceBinarySearchNode *grand, BalanceBinarySearchNode *parent, BalanceBinarySearchNode *child)
+{
+    parent->parent = grand->parent;     // 3
+
+    if (BalanceBinarySearchTreeNodeIsLeft(grand))
+    {
+        grand->parent->left = parent;       // 4
+    }
+    else if (BalanceBinarySearchTreeNodeIsRight(grand))
+    {
+        grand->parent->right = parent;      // 4
+    }
+    else
+    {
+        /* 根结点 */
+        pTree->root = parent;
+    }
+    grand->parent = parent;                 // 5
+
+    if (child != NULL)
+    {   
+        child->parent = grand;              // 6
+    }
+
+    /* 调整高度 */
+    BalanceBinarySearchTreeNodeUpdateHeight(grand);
+    BalanceBinarySearchTreeNodeUpdateHeight(parent);
+
+    return ON_SUCCESS;
+}
+
+
+/* 左旋 : RR */
+static int BalanceBinarySearchTreeNodeRotateLeft(BalanceBinarySearchTree *pTree, BalanceBinarySearchNode *grand)
+{
+    BalanceBinarySearchNode *parent = grand->right;
+    BalanceBinarySearchNode *child = parent->left;
+
+    grand->right = child;       // 1
+    parent->left = grand;       // 2
+   
+#if 0
+    parent->parent = grand->parent;     // 3
+
+    if (BalanceBinarySearchTreeNodeIsLeft(grand))
+    {
+        grand->parent->left = parent;       // 4
+    }
+    else if (BalanceBinarySearchTreeNodeIsRight(grand))
+    {
+        grand->parent->right = parent;      // 4
+    }
+    else
+    {
+        /* 根结点 */
+        pTree->root = parent;
+    }
+    grand->parent = parent;                 // 5
+
+    if (child != NULL)
+    {   
+        child->parent = grand;              // 6
+    }
+
+    /* 调整高度 */
+    BalanceBinarySearchTreeNodeUpdateHeight(grand);
+    BalanceBinarySearchTreeNodeUpdateHeight(parent);
+#else
+    BalanceBinarySearchTreeNodeAfterRotate(pTree, grand, parent, child);
+#endif
+
+    return ON_SUCCESS;
+}
+
+/* 右旋 : LL */
+static int BalanceBinarySearchTreeNodeRotateRight(BalanceBinarySearchTree *pTree, BalanceBinarySearchNode *grand)
+{
+    BalanceBinarySearchNode * parent = grand->left;
+    BalanceBinarySearchNode * child = parent->right;
+
+    grand->left = child;            // 1
+    parent->right = grand;          // 2
+
+#if 0
+    parent->parent = grand->parent; // 3
+
+    if (BalanceBinarySearchTreeNodeIsLeft(grand))
+    {
+        grand->parent->left = parent;       // 4
+    }
+    else if (BalanceBinarySearchTreeNodeIsRight(grand))
+    {
+        grand->parent->right = parent;      // 4
+    }
+    else
+    {
+        /* 根结点 */
+        pTree->root = parent;
+    }
+    grand->parent = parent;     // 5
+
+    if (child != NULL)
+    {
+        child->parent = grand;
+    }
+
+    /* 调整高度 */
+    BalanceBinarySearchTreeNodeUpdateHeight(grand);
+    BalanceBinarySearchTreeNodeUpdateHeight(parent);
+#else
+    BalanceBinarySearchTreeNodeAfterRotate(pTree, grand, parent, child);
+#endif
+
+    return ON_SUCCESS;
+}
+
+/* 该结点不平衡, 且node是最低的不平衡结点. */
+static int BalanceBinarySearchTreeNodeAdjustBalance(BalanceBinarySearchTree *pTree, BalanceBinarySearchNode *node)
+{
+    /* 在这里需要判断出不平衡的类型: LL, RR, LR, RL */
+    BalanceBinarySearchNode * parent = BalanceBinarySearchTreeGetTallerNode(node);
+    BalanceBinarySearchNode * child = BalanceBinarySearchTreeGetTallerNode(parent);
+
+    if (BalanceBinarySearchTreeNodeIsLeft(parent))
+    {
+        /* L? */
+        if (BalanceBinarySearchTreeNodeIsLeft(child))
+        {
+            /* LL */
+            BalanceBinarySearchTreeNodeRotateRight(pTree, node);
+        }
+        else
+        {
+            /* LR : 先左旋, 再右旋 */
+            BalanceBinarySearchTreeNodeRotateLeft(pTree, parent);
+            BalanceBinarySearchTreeNodeRotateRight(pTree, node);
+        }
+    }
+    else
+    {
+        /* R? */
+        if (BalanceBinarySearchTreeNodeIsLeft(child))
+        {
+            /* RL : 先右旋, 再左旋 */
+            BalanceBinarySearchTreeNodeRotateRight(pTree, parent);
+            BalanceBinarySearchTreeNodeRotateLeft(pTree, node);
+        }
+        else
+        {
+            /* RR */
+            BalanceBinarySearchTreeNodeRotateLeft(pTree, node);
+        }
+    }
+}
+
+/* node是新添加的结点 */
+static int insertNodeAfter(BalanceBinarySearchTree *pTree, BalanceBinarySearchNode * node)
+{
+    int ret = 0;
+
+
+    while ((node = node->parent) != NULL)
+    {
+        /* node是什么? 父结点 祖父结点 祖先结点 */
+        /* 程序执行到这个地方. 说明不止一个结点 */
+        if (BalanceBinarySearchTreeNodeIsBalanced(node))
+        {
+            /* 如果结点平衡, 就更新高度 */
+            BalanceBinarySearchTreeNodeUpdateHeight(node);
+        }
+        else
+        {
+            /* 该结点不平衡, 且node是最低的不平衡结点. */
+            BalanceBinarySearchTreeNodeAdjustBalance(pTree, node);
+
+            /* 直接break. */
+            break;
+        }
+    }
+}
+
+
+/* 删除结点需要做的调整 */
+/* node是要删除的结点 */
+static int removeNodeAfter(BalanceBinarySearchTree *pTree, BalanceBinarySearchNode * node)
+{
+    while ((node = node->parent) != NULL)
+    {
+        /* 程序执行到这个地方. 说明不止一个结点 */
+        if (BalanceBinarySearchTreeNodeIsBalanced(node))
+        {
+            /* 如果结点平衡, 就更新高度 */
+            BalanceBinarySearchTreeNodeUpdateHeight(node);
+        }
+        else
+        {
+            /* 该结点不平衡, 且node是最低的不平衡结点. */
+            BalanceBinarySearchTreeNodeAdjustBalance(pTree, node);
+        }
+    }
+}
+
 /* 树的插入 */
 int balanceBinarySearchTreeInsert(BalanceBinarySearchTree *pTree, ELEMENTTYPE data)
 {
@@ -279,6 +493,7 @@ int balanceBinarySearchTreeInsert(BalanceBinarySearchTree *pTree, ELEMENTTYPE da
         {
             return MALLOC_ERROR;
         }
+        insertNodeAfter(pTree, pTree->root);
         /* 树的元素个数加一. */
         (pTree->size)++;
         
@@ -328,6 +543,9 @@ int balanceBinarySearchTreeInsert(BalanceBinarySearchTree *pTree, ELEMENTTYPE da
     {
         parentNode->right = newNode;
     }
+
+    /* 插入完数据之后需要做调整 */
+    insertNodeAfter(pTree, newNode);
 
     /* 树的元素个数加一. */
     (pTree->size)++;
@@ -686,6 +904,9 @@ static int balanceBinarySearchTreeDeleteNode(BalanceBinarySearchTree *pTree, Bal
             pTree->root = childNode;
 
             freeNode = delNode;
+
+            /* 删除的结点 */
+            removeNodeAfter(pTree, freeNode);
         }
         else
         {
@@ -698,6 +919,9 @@ static int balanceBinarySearchTreeDeleteNode(BalanceBinarySearchTree *pTree, Bal
                 delNode->parent->right = childNode;
             }
             freeNode = delNode;
+
+            /* 删除的结点 */
+            removeNodeAfter(pTree, freeNode);
         }
     }
     else
@@ -706,7 +930,10 @@ static int balanceBinarySearchTreeDeleteNode(BalanceBinarySearchTree *pTree, Bal
         {
             /* 度为0 && 根结点 */
             freeNode = delNode;
-          
+
+            /* 删除的结点 */
+            removeNodeAfter(pTree, freeNode);
+
             /* 根结点置为NULL. */
             pTree->root = NULL;
         }
@@ -722,6 +949,9 @@ static int balanceBinarySearchTreeDeleteNode(BalanceBinarySearchTree *pTree, Bal
                 delNode->parent->right = NULL;
             }
             freeNode = delNode;
+
+            /* 删除的结点 */
+            removeNodeAfter(pTree, freeNode);
         }
     }
 
@@ -758,11 +988,13 @@ int balanceBinarySearchTreeDelete(BalanceBinarySearchTree *pTree, ELEMENTTYPE da
 /* 树的元素个数 */
 int balanceBinarySearchTreeGetSize(BalanceBinarySearchTree *pTree, int *pSize)
 {
-    if (pTree == NULL || pSize == NULL)
+    if (pTree == NULL)
     {
         return NULL_PTR;
     }
-    *pSize = pTree->size;
-
+    if (pSize)
+    {
+        *pSize = pTree->size;
+    }
     return ON_SUCCESS;
 }
