@@ -12,16 +12,37 @@ static int swapNum(int *val1, int *val2)
     return 0;
 }
 
+static int searchInsertPos(int* nums, int numsSize, int target) 
+{
+    int left = 0;
+    int right = numsSize - 1;
+    int mid = 0;
+    while (left <= right)
+    {
+        mid = (left + right) / 2;
+        if (nums[mid] <= target)
+            left = mid + 1;
+        else 
+            right = mid - 1;
+    }
+    return left;
+}
+
 /* 插入排序 */
 int insertSort(int *nums, int numSize)
 {
     /* 插入排序默认第一个元素已经排好序了. */
 
+    int insertPos = 0;
     for (int idx = 1; idx < numSize; idx++)
     {
         int copyNum = nums[idx];
         int prevIdx = idx - 1;
 
+        /* 找到要排序元素要插入的位置 O(logN) */
+        insertPos = searchInsertPos(nums, idx, copyNum);
+
+        #if 0
         while (nums[prevIdx] > copyNum && prevIdx >= 0)
         {
             nums[prevIdx + 1] = nums[prevIdx];
@@ -29,6 +50,14 @@ int insertSort(int *nums, int numSize)
         }
         // nums[prevIdx] <= copyNum && prevIdx = -1
         nums[prevIdx + 1] = copyNum;
+        #else
+        /* 数组迁移, 从后向前迁移. */
+        for (int jdx = idx; jdx > insertPos; jdx--)
+        {
+            nums[jdx] = nums[jdx - 1];
+        }
+        nums[insertPos] = copyNum;
+        #endif
     }
     
     return 0;
