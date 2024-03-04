@@ -17,6 +17,7 @@ enum OPERATION_OPTION
     ENTER = 'D',
 };
 
+
 /* 菜单 */
 int contactMenu(int optionLight);
 
