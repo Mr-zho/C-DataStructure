@@ -28,10 +28,16 @@ int main()
     binaryHeapGetSize(&heap, &size);
     printf("size is %d\n", size);
 
-    /* 堆顶元素 */
     int *topVal = NULL;
-    binaryHeapTop(&heap, (void **)&topVal);
-    printf("topVal:%d\n", *topVal);
-
+    while (!binaryHeapIsEmpty(&heap))
+    {
+        /* 堆顶元素 */
+        binaryHeapTop(&heap, (void **)&topVal);
+        binaryHeapDelete(&heap);
+        printf("topVal:%d\n", *topVal);
+    }
+    /* 销毁 */
+    binaryHeapDetroy(&heap);
+    
     return 0;
 }

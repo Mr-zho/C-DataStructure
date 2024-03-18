@@ -9,7 +9,6 @@ typedef struct BinaryHeap
     int size;               /* 堆元素个数 */
     int capacity;           /* 容量 */
 
-
     /* 回调函数 */
     int (*compareFunc)(ELEMENT_TYPE arg1, ELEMENT_TYPE arg2);
 } BinaryHeap;

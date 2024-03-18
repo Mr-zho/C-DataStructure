@@ -15,8 +15,14 @@ enum STATUS_CODE
 };
 
 /* 静态函数初始化 */
+/* 上浮 */
 static int floatUp(BinaryHeap * heap, int index);
+/* 下沉 */
+static int sinkDown(BinaryHeap * heap, int index);
+/* 扩容 */
 static int expandBinaryHeapCapacity(BinaryHeap *pArray);
+/* 缩容 */
+static int shrinkBinaryHeapCapacity(BinaryHeap *pArray);
 
 /* 二叉堆的初始化 */
 int binaryHeapInit(BinaryHeap * heap, int (*compareFunc)(ELEMENT_TYPE arg1, ELEMENT_TYPE arg2))
@@ -135,6 +141,7 @@ static int floatUp(BinaryHeap * heap, int index)
     return ON_SUCCESS;
 }
 
+
 /* 二叉堆的新增 */
 int binaryHeapInsert(BinaryHeap * heap, ELEMENT_TYPE data)
 {
@@ -161,11 +168,73 @@ int binaryHeapInsert(BinaryHeap * heap, ELEMENT_TYPE data)
     return ON_SUCCESS;
 }
 
+/* 下沉 */
+static int sinkDown(BinaryHeap * heap, int index)
+{
+    ELEMENT_TYPE currentData = heap->data[index];
+
+    int cmp = 0;
+    /* 第一个叶子结点的索引 = 非叶子结点的数量 */
+    /* 必须保证index位置是非叶子结点  */
+    int halfIndex = heap->size >> 1;
+    while (index < halfIndex)
+    {
+        /* index的结点 有两种情况 */
+        /* 1. 有两个子结点 */
+        /* 2. 有一个子结点: 一定是左结点 */
+        
+        /* 默认为左子结点 */
+        int childIndex = (index << 1) + 1;
+
+        /* 右子结点 */
+        int rightIndex = childIndex + 1;
+
+        /* 选出左右子结点中 较小的值 */
+        if (rightIndex < heap->size && heap->compareFunc(heap->data[rightIndex], heap->data[childIndex]) < 0)
+        {
+            childIndex = rightIndex;
+        }
+
+        /* 比较 */
+        cmp = heap->compareFunc(currentData, heap->data[childIndex]);
+        if (cmp < 0)
+        {
+            break;
+        }
+
+        /* 将子结点的值存放到当前位置 */
+        heap->data[index] = heap->data[childIndex];
+
+        /* 更新结点index */
+        index = childIndex;
+    }
+    heap->data[index] = currentData;
+
+    return ON_SUCCESS;
+}
 
 /* 二叉堆的删除 */
 int binaryHeapDelete(BinaryHeap * heap)
 {
+    if (heap == NULL)
+    {
+        return NULL_PTR;
+    }
 
+    /* 没有元素 */
+    if (heap->size == 0)
+    {
+        return INVALID_ACCESS;
+    }
+
+    /* 至少有一个元素 */
+    /* 覆盖 */
+    heap->data[0] = heap->data[--(heap->size)];
+    
+    /* 下沉 */
+    sinkDown(heap, 0);
+
+    return ON_SUCCESS;
 }
 
 /* 二叉堆 堆顶元素 */
@@ -206,5 +275,17 @@ bool binaryHeapIsEmpty(BinaryHeap * heap)
 /* 二叉堆的销毁 */
 int binaryHeapDetroy(BinaryHeap * heap)
 {
-    
+    if (heap == NULL)
+    {
+        return NULL_PTR;
+    }
+
+    if (heap->data != NULL)
+    {
+        free(heap->data);
+        heap->data = NULL;
+    }
+
+    return ON_SUCCESS;
 }
+
