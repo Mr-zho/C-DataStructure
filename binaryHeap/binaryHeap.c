@@ -88,6 +88,7 @@ static int floatUp(BinaryHeap * heap, int index)
     /* 当前结点的值 */
     ELEMENT_TYPE curIndexVal = heap->data[index];
 
+#if 0
     int cmp = 0;
     while (index > 0)
     {
@@ -107,6 +108,29 @@ static int floatUp(BinaryHeap * heap, int index)
 
         index = parentIndex;
     }
+#else
+
+    int cmp = 0;
+    while (index > 0)
+    {
+        /* 父结点索引 */
+        int parentIndex = (index - 1) >> 1;
+
+        cmp = heap->compareFunc(curIndexVal, heap->data[parentIndex]);
+        if (cmp > 0)
+        {
+            break;
+        }
+
+        /* 将父结点元素值 拷贝到 当前位置 */
+        heap->data[index] = heap->data[parentIndex];
+
+        index = parentIndex;
+    }
+    /* 最后赋值 */
+    heap->data[index] = curIndexVal;
+
+#endif
 
     return ON_SUCCESS;
 }
