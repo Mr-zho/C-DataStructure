@@ -998,3 +998,40 @@ int balanceBinarySearchTreeGetSize(BalanceBinarySearchTree *pTree, int *pSize)
     }
     return ON_SUCCESS;
 }
+
+static void printTree(BalanceBinarySearchTree *pTree, BalanceBinarySearchNode *root, int level) 
+{
+    if (root == NULL)
+        return;
+
+    // Indentation for this level
+    int indent = 4;
+
+    // Print right child
+    printTree(pTree, root->right, level + 1);
+
+    // Print the current node's data with indentation
+    for (int i = 0; i < level * indent; i++)
+    {
+        printf(" ");
+    }
+
+    pTree->printFunc(root->data);
+    // printf("%d\n", root->data);
+
+    // Print left child
+    printTree(pTree, root->left, level + 1);
+}
+
+// 树形打印
+int balanceBinarySearchTreePrintAsTree(BalanceBinarySearchTree *pTree)
+{
+    if (pTree == NULL)
+    {
+        return NULL_PTR;
+    }
+
+    printTree(pTree, pTree->root, 0);
+    
+    return ON_SUCCESS;
+}

@@ -30,28 +30,28 @@ int compareStruct(void *arg1, void *arg2)
 
 int main()
 {
-    DynamicArray array;
+    DynamicArray *array = NULL;
     memset(&array, 0, sizeof(array));
     
     dynamicArrayInit(&array, 5);
 #if 1
     int size = 0;
-    dynamicArrayGetSize(&array, &size);
+    dynamicArrayGetSize(array, &size);
     printf("size:%d\n", size);
 
     int idx = 1;
     for (idx; idx <= 5; idx++)
     {
-        dynamicArrayInsertData(&array, (void *)&idx);
+        dynamicArrayInsertData(array, (void *)&idx);
     }
 
-    dynamicArrayGetSize(&array, &size);
+    dynamicArrayGetSize(array, &size);
     printf("size:%d\n", size);
 
     int *posValue = NULL;
     for (int idx = 0; idx < size; idx++)
     {
-        dynamicArrayGetAppointPosData(&array, idx, (void **)&posValue);
+        dynamicArrayGetAppointPosData(array, idx, (void **)&posValue);
         printf("posValue:%d\t", *posValue);
     }   
     printf("\n");
@@ -119,6 +119,6 @@ int main()
 #endif
 
     /* 释放 */
-    dynamicArrayDestroy(&array);
+    dynamicArrayDestroy(array);
     return 0;
 }

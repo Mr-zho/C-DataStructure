@@ -127,7 +127,6 @@ int main()
     DoubleLinkListGetTailPositionData(list, (void **)&tailValue);
     printf("tailValue:%d\n", *tailValue);
 
-
     /* 链表释放 */
     DoubleLinkListDestroy(list);
     

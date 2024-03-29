@@ -23,7 +23,7 @@ int printFuncBasic(void *arg)
     return ret;
 }
 
-
+/* 完全二叉树, 满二叉树 [B树 红黑树] B+树 */
 int main()
 {
     #if 1
@@ -31,8 +31,9 @@ int main()
     balanceBinarySearchTreeInit(&tree, comparFuncBasic, printFuncBasic);
 
     /*  */
-    int nums[BUFFER_SIZE] = {13, 14, 15, 12, 11, 17, 16, 8, 9, 1};
-    for (int idx = 0; idx < BUFFER_SIZE; idx++)
+    int nums[] = {13, 14, 46};
+    int numSize = sizeof(nums) / sizeof(nums[0]);
+    for (int idx = 0; idx < numSize; idx++)
     {
         balanceBinarySearchTreeInsert(tree, (void *)&nums[idx]);
     }
@@ -48,7 +49,7 @@ int main()
     /* 层序遍历 */
     balanceBinarySearchTreeLevelOrder(tree);
     printf("\n");
-    #endif
 
-    
+    balanceBinarySearchTreePrintAsTree(tree);
+    #endif
 }

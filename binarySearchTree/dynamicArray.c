@@ -14,16 +14,6 @@ enum STATUS_CODE
 
 #define DEFAULR_CAPACITY    10
 
-/* 动态数组结构体 */
-struct DynamicArray
-{
-    /* 数据 */
-    ELEMENTTYPE * data;
-    /* 元素个数 */
-    int size;
-    /* 容量大小 */
-    int capacity;
-};
 
 /* 静态函数前置声明 */
 static int expandDynamicArrayCapacity(DynamicArray *pArray);
@@ -34,7 +24,7 @@ static int dynamicArrayAppointDataGetPos(DynamicArray *pArray, ELEMENTTYPE data,
 
 
 /* 动态数组初始化 */
-int dynamicArrayInit(DynamicArray **pArray, int capacity)
+int dynamicArrayInit(DynamicArray *pArray, int capacity)
 {
     int ret = 0;
     if (pArray == NULL)
@@ -47,30 +37,20 @@ int dynamicArrayInit(DynamicArray **pArray, int capacity)
     {
         capacity = DEFAULR_CAPACITY;
     }
-    
-    DynamicArray * array = malloc(sizeof(DynamicArray) * 1);
-    if (array == NULL)
-    {
-        printf("malloc error");
-        return MALLOC_ERROR;
-    }
 
     /* 分配堆空间 */ 
-    array->data = (ELEMENTTYPE *)malloc(sizeof(ELEMENTTYPE) * capacity);
-    if (array->data == NULL)
+    pArray->data = (ELEMENTTYPE *)malloc(sizeof(ELEMENTTYPE) * capacity);
+    if (pArray->data == NULL)
     {
         printf("malloc error\n");
         return MALLOC_ERROR;
     }
     /* 清除脏数据 */
-    memset(array->data, 0, sizeof(ELEMENTTYPE) * capacity);
+    memset(pArray->data, 0, sizeof(ELEMENTTYPE) * capacity);
 
     /* 初始化的时候, 元素个数为0 */
-    array->size = 0;
-    array->capacity = capacity;
-
-    /* 二级指针 解引用 */
-    *pArray = array;
+    pArray->size = 0;
+    pArray->capacity = capacity;
 
     return ON_SUCCESS;
 }
@@ -348,12 +328,6 @@ int dynamicArrayDestroy(DynamicArray *pArray)
     {
         free(pArray->data);
         pArray->data = NULL;
-    }
-
-    if (pArray != NULL)
-    {
-        free(pArray);
-        pArray = NULL;
     }
 
     return ON_SUCCESS;

@@ -1,10 +1,13 @@
 #include "dynamicArrayStack.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 #define BUFFER_SIZE 5
 
+
 int main()
 {
+#if 1
     DynamicArrayStack stack;
     dynamicArrayStackInit(&stack);
 
@@ -30,4 +33,5 @@ int main()
 
     /* 销毁 */
     dynamicArrayStackDestroy(&stack);
+#endif
 }

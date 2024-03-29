@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <string.h>
 #include "doubleLinkListQueue.h"
+#include "dynamicArrayStack.h"
+#include <stdbool.h>
 
 /* 状态码 */
 enum STATUS_CODE
@@ -23,6 +25,10 @@ static int BinarySearchTreeNodeHasTwoChildrens(BinarySearchNode *node);
 static int BinarySearchTreeNodeHasOneChildrens(BinarySearchNode *node);
 /* 结点的度为0 (叶子结点) */
 static int BinarySearchTreeNodeIsLeaf(BinarySearchNode *node);
+/* 当前结点是父结点的左子树 */
+static int BalanceBinarySearchTreeNodeIsLeft(BinarySearchNode *node);
+/* 当前结点是父结点的右子树 */
+static int BalanceBinarySearchTreeNodeIsRight(BinarySearchNode *node);
 /* 结点的前驱结点 */
 static BinarySearchNode * BinarySearchTreeNodeGetPrecursor(BinarySearchNode *node);
 /* 结点的后继结点 */
@@ -136,6 +142,18 @@ static int BinarySearchTreeNodeIsLeaf(BinarySearchNode *node)
     return node->left == NULL && node->right == NULL;
 }
 
+/* 当前结点是父结点的左子树 */
+static int BinarySearchTreeNodeIsLeft(BinarySearchNode *node)
+{
+    return (node->parent != NULL) && (node == node->parent->left);
+}
+
+/* 当前结点是父结点的右子树 */
+static int BinarySearchTreeNodeIsRight(BinarySearchNode *node)
+{
+    return (node->parent != NULL) && (node == node->parent->right);
+}
+
 /* 创建二叉搜索树的结点 */
 static BinarySearchNode * createBinarySearchTreeNode(ELEMENTTYPE data, BinarySearchNode * parent)
 {
@@ -234,6 +252,8 @@ int binarySearchTreeInsert(BinarySearchTree *pTree, ELEMENTTYPE data)
 /* 前序遍历 */
 static int binarySearchTreeInnerPreOrder(BinarySearchTree *pTree, BinarySearchNode * travelNode)
 {
+    #if 0
+    /* 递归实现 */
     if (travelNode == NULL)
     {
         return ON_SUCCESS;
@@ -245,6 +265,49 @@ static int binarySearchTreeInnerPreOrder(BinarySearchTree *pTree, BinarySearchNo
     binarySearchTreeInnerPreOrder(pTree, travelNode->left);
     /* 右子树 */
     binarySearchTreeInnerPreOrder(pTree, travelNode->right);
+    #else
+    /* 非递归实现 */
+    if (travelNode == NULL)
+    {
+        return ON_SUCCESS;
+    }
+
+    DynamicArrayStack stack;
+
+    /* 初始化栈 */
+    dynamicArrayStackInit(&stack);
+
+    while (true)
+    {
+        if (travelNode != NULL)
+        {
+            /* 访问travelNode结点 */
+            pTree->printFunc(travelNode->data);
+            /* 将右结点入栈 */
+            if (travelNode->right != NULL)
+            {
+                dynamicArrayStackPush(&stack, travelNode->data);
+            }
+            /* 向左边走 */
+            travelNode = travelNode->left;
+        }
+        else
+        {
+            /* 栈是否为空 */
+            if (dynamicArrayStackIsEmpty(&stack))
+            {
+                return ON_SUCCESS;
+            }
+            else
+            {
+                dynamicArrayStackTop(&stack, &travelNode);
+                dynamicArrayStackPop(&stack);
+            }
+        }
+    }
+    
+    #endif
+
 
     return ON_SUCCESS;
 }
@@ -264,6 +327,8 @@ int binarySearchTreePreOrder(BinarySearchTree *pTree)
 /* 树的中序遍历 */
 static int binarySearchTreeInnerInOrder(BinarySearchTree *pTree, BinarySearchNode * travelNode)
 {
+    #if 0
+    /* 树的递归实现 */
     if (travelNode == NULL)
     {
         return ON_SUCCESS;
@@ -275,7 +340,41 @@ static int binarySearchTreeInnerInOrder(BinarySearchTree *pTree, BinarySearchNod
     pTree->printFunc(travelNode->data);
     /* 右子树 */
     binarySearchTreeInnerInOrder(pTree, travelNode->right);
+    #else
+    /* 树的非递归实现 */
+    DynamicArrayStack stack;
 
+    /* 初始化栈 */
+    dynamicArrayStackInit(&stack);
+
+
+    while (true)
+    {
+        if (travelNode != NULL)
+        {
+            dynamicArrayStackPush(&stack, travelNode);
+            travelNode = travelNode->left;
+        }
+        else
+        {
+            if (dynamicArrayStackIsEmpty(&stack))
+            {
+                return;
+            }
+            else
+            {
+                dynamicArrayStackTop(&stack, &travelNode);
+                dynamicArrayStackPop(&stack);
+
+                /* 访问 travelNode结点 */
+                pTree->printFunc(travelNode->data);
+
+                /* 让右结点进行中序遍历 */
+                travelNode = travelNode->right;
+            }
+        }
+    }
+    #endif
     return ON_SUCCESS;
 }
 
@@ -295,6 +394,8 @@ int binarySearchTreeInOrder(BinarySearchTree *pTree)
 /* 树的中序遍历 */
 static int binarySearchTreeInnerPostOrder(BinarySearchTree *pTree, BinarySearchNode * travelNode)
 {
+    #if 0
+    /* 递归实现 */
     if (travelNode == NULL)
     {
         return ON_SUCCESS;
@@ -306,7 +407,42 @@ static int binarySearchTreeInnerPostOrder(BinarySearchTree *pTree, BinarySearchN
     binarySearchTreeInnerPostOrder(pTree, travelNode->right);
     /* 根结点 */
     pTree->printFunc(travelNode->data);
+    #else
+    /* 树的非递归实现 */
+    DynamicArrayStack stack;
 
+    /* 初始化栈 */
+    dynamicArrayStackInit(&stack);
+    /* 压栈 */
+    dynamicArrayStackPush(&stack, travelNode);
+    
+    BinarySearchNode * prevVisitNode = NULL;
+
+    BinarySearchNode * topVal = NULL;
+    while (!dynamicArrayStackIsEmpty(&stack))
+    {
+        dynamicArrayStackTop(&stack, &topVal);
+
+        if (BinarySearchTreeNodeIsLeaf(topVal) || (prevVisitNode != NULL && prevVisitNode->parent == topVal))
+        {
+            dynamicArrayStackTop(&stack, &prevVisitNode);
+            /* 访问结点 */
+            pTree->printFunc(prevVisitNode->data);
+        }
+        else
+        {
+            if (topVal->right != NULL)
+            {
+                dynamicArrayStackPush(&stack, topVal->right);
+            }   
+
+            if (topVal->left != NULL)
+            {
+                dynamicArrayStackPush(&stack, topVal->left);
+            }
+        }
+    }
+    #endif
     return ON_SUCCESS;
 }
 
@@ -406,7 +542,7 @@ int binarySearchTreeGetHeight(BinarySearchTree *pTree, int *pHeight)
     while(!doubleLinkListQueueIsEmpty(queue))
     {
         /* 取出队头元素 */
-        doubleLinkListQueueFront(queue, (void **)&frontVal);
+        doubleLinkListQueueFront(queue, (void **)frontVal);
         /* 出队 */
         doubleLinkListQueuePop(queue);
 

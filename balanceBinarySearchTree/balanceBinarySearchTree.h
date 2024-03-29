@@ -69,4 +69,7 @@ int balanceBinarySearchTreeDelete(BalanceBinarySearchTree *pTree, ELEMENTTYPE da
 
 /* 树是否存在指定元素 */
 int balanceBinarySearchTreeIsContainVal(BalanceBinarySearchTree *pTree, ELEMENTTYPE data);
+
+/* 树形打印 */
+int balanceBinarySearchTreePrintAsTree(BalanceBinarySearchTree *pTree);
 #endif

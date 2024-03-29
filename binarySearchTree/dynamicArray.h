@@ -1,13 +1,10 @@
 #ifndef __DYNAMIC_ARRAY_H__
 #define __DYNAMIC_ARRAY_H__
 
-#define ELEMENTTYPE  void *
-
-/* 动态数组结构体 */
-typedef struct DynamicArray DynamicArray;
+#include "common.h"
 
 /* 动态数组初始化 */
-int dynamicArrayInit(DynamicArray **pArray, int capacity);
+int dynamicArrayInit(DynamicArray *pArray, int capacity);
 
 /* 动态数组插入元素 (默认插到数组末尾位置) */
 int dynamicArrayInsertData(DynamicArray *pArray, ELEMENTTYPE data);
